@@ -52,8 +52,7 @@ public class TableViewController<T> : ViewController		// ViewControllerクラス
 
 #region セルを作成するメソッドとセルの内容を更新するメソッドの実装
 	[SerializeField] private GameObject cellBase;	// コピー元のセル
-	private LinkedList<TableViewCell<T>> cells = 
-		new LinkedList<TableViewCell<T>>();			// セルを保持
+	private LinkedList<TableViewCell<T>> cells = new LinkedList<TableViewCell<T>>(); // セルを保持
 
 	// インスタンスのロード時Awakeメソッドの後に呼ばれる
 	protected virtual void Start()
@@ -63,13 +62,12 @@ public class TableViewController<T> : ViewController		// ViewControllerクラス
 
 #region セルを再利用する処理の実装
 		// Scroll RectコンポーネントのOn Value Changedイベントのイベントリスナーを設定する
-		CachedScrollRect.onValueChanged.AddListener(OnScrollPosChanged);
+		//CachedScrollRect.onValueChanged.AddListener(OnScrollPosChanged);
 #endregion
 	}
 
 	// セルを作成するメソッド
-	private TableViewCell<T> CreateCellForIndex(int index)
-	{
+	private TableViewCell<T> CreateCellForIndex(int index) {
 		// コピー元のセルから新しいセルを作成する
 		GameObject obj = Instantiate(cellBase) as GameObject;
 		obj.SetActive(true);
@@ -98,20 +96,16 @@ public class TableViewController<T> : ViewController		// ViewControllerクラス
 	}
 
 	// セルの内容を更新するメソッド
-	private void UpdateCellForIndex(TableViewCell<T> cell, int index)
-	{
+	private void UpdateCellForIndex(TableViewCell<T> cell, int index) {
 		// セルに対応するリスト項目のインデックスを設定する
 		cell.DataIndex = index;
 
-		if(cell.DataIndex >= 0 && cell.DataIndex <= tableData.Count-1)
-		{
+		if(cell.DataIndex >= 0 && cell.DataIndex <= tableData.Count-1) {
 			// セルに対応するリスト項目があれば、セルをアクティブにして内容を更新し、高さを設定する
 			cell.gameObject.SetActive(true);
 			cell.UpdateContent(tableData[cell.DataIndex]);
 			cell.Height = CellHeightAtIndex(cell.DataIndex);
-		}
-		else
-		{
+		} else {
 			// セルに対応するリスト項目がなかったら、セルを非アクティブにして表示しない
 			cell.gameObject.SetActive(false);
 		}
@@ -123,8 +117,7 @@ public class TableViewController<T> : ViewController		// ViewControllerクラス
 	[SerializeField] private RectOffset visibleRectPadding;	// visibleRectのパディング
 
 	// visibleRectを更新するためのメソッド
-	private void UpdateVisibleRect()
-	{
+	private void UpdateVisibleRect() {
 		// visibleRectの位置はスクロールさせる内容の基準点からの相対位置
 		visibleRect.x = 
 			CachedScrollRect.content.anchoredPosition.x + visibleRectPadding.left;
@@ -140,11 +133,21 @@ public class TableViewController<T> : ViewController		// ViewControllerクラス
 #endregion
 
 #region テーブルビューの表示内容を更新する処理の実装
-	protected void UpdateContents()
-	{
+	protected void UpdateContents() {
 		UpdateContentSize();	// スクロールさせる内容のサイズを更新する
 		UpdateVisibleRect();	// visibleRectを更新する
 
+		Vector2 cellTop = new Vector2(0.0f, -padding.top);
+		for(int i=0; i<tableData.Count; i++) {
+			float cellHeight = CellHeightAtIndex(i);
+			Vector2 cellBottom = cellTop + new Vector2(0.0f, -cellHeight);
+			TableViewCell<T> cell = CreateCellForIndex(i);
+			cell.Top = cellTop;
+
+			cellTop = cellBottom + new Vector2(0.0f, spacingHeight);
+		}
+
+		/*
 		if(cells.Count < 1)
 		{
 			// セルが1つもない場合、visibleRectの範囲に入る最初のリスト項目を探して、
@@ -188,8 +191,10 @@ public class TableViewController<T> : ViewController		// ViewControllerクラス
 			// visibleRectの範囲内に空きがあればセルを作成する
 			FillVisibleRectWithCells();
 		}
+		*/
 	}
 
+/*
 	// visibleRectの範囲内に表示される分のセルを作成するメソッド
 	private void FillVisibleRectWithCells()
 	{
@@ -216,8 +221,11 @@ public class TableViewController<T> : ViewController		// ViewControllerクラス
 			nextCellTop = lastCell.Bottom + new Vector2(0.0f, -spacingHeight);
 		}
 	}
+*/
+
 #endregion
 
+/*
 #region セルを再利用する処理の実装
 	private Vector2 prevScrollPos;	// 前回のスクロール位置を保持
 
@@ -227,7 +235,7 @@ public class TableViewController<T> : ViewController		// ViewControllerクラス
 		// visibleRectを更新する
 		UpdateVisibleRect();
 		// スクロールした方向によって、セルを再利用して表示を更新する
-		ReuseCells((scrollPos.y < prevScrollPos.y)? 1: -1);
+		//ReuseCells((scrollPos.y < prevScrollPos.y)? 1: -1);
 
 		prevScrollPos = scrollPos;
 	}
@@ -277,4 +285,5 @@ public class TableViewController<T> : ViewController		// ViewControllerクラス
 		}
 	}
 #endregion
+*/
 }

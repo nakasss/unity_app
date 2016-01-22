@@ -8,15 +8,42 @@ public class VideoTableViewController : TableViewController<VideoData> {
 
 	private void LoadData() {
 		tableData = new List<VideoData>() {
-			new VideoData {title = "TOMORROWLAND"},
-			new VideoData {title = "VOLVO OCEAN RACE"},
-			new VideoData {title = "EY BUILDING A BETTER WORKING WORLD IN VR"},
-			new VideoData {title = "TOMORROWLAND"},
-			new VideoData {title = "VOLVO OCEAN RACE"},
-			new VideoData {title = "EY BUILDING A BETTER WORKING WORLD IN VR"},
-			new VideoData {title = "TOMORROWLAND"},
-			new VideoData {title = "VOLVO OCEAN RACE"},
-			new VideoData {title = "EY BUILDING A BETTER WORKING WORLD IN VR"}
+			new VideoData {
+				title = "Tomorrowland: A 360 Experience",
+				featureImgURL = "tomorrowland.jpg"
+			},
+			new VideoData {
+				title = "In the trail of the Refugees",
+				featureImgURL = "refugess_test.jpg"
+			},
+			new VideoData {
+				title = "Eye Filmmuseum",
+				featureImgURL = "Eye.jpg"
+			},
+			new VideoData {
+				title = "EY: A better working world in virtual reality",
+				featureImgURL = "EY.jpg"
+			},
+			new VideoData {
+				title = "Feyenoord-Ajax: the Derby in amazing 360 video",
+				featureImgURL = "feyenoord.jpg"
+			},
+			new VideoData {
+				title = "Port of Rotterdam in 360 during the World Expo in Milan",
+				featureImgURL = "portofrotterdam.jpg"
+			},
+			new VideoData {
+				title = "In the footsteps of Hardwell in Miami",
+				featureImgURL = "hardwell.jpg"
+			},
+			new VideoData {
+				title = "Biotherm the Dose: Kitesurfing with Youri Zoon in 360",
+				featureImgURL = "biotherm.jpg"
+			},
+			new VideoData {
+				title = "The Volvo Ocean Race: Team SCA in 360",
+				featureImgURL = "teamsca.jpg"
+			}
 		};
 
 		UpdateContents();
