@@ -156,6 +156,9 @@ public class PagingScrollViewController :
 	void Start() {
 		pageControl.SetNumberOfPages(CachedScrollRect.content.transform.childCount);	// ページ数を5に設定する
 		pageControl.SetCurrentPage(0);		// ページコントロールの表示を初期化する
+
+		//GetStartedButtonを透明にする
+		startButtonArea.alpha = 0.0f;
 	}
 
 	// 毎フレーム呼ばれる

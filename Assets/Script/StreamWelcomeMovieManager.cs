@@ -2,6 +2,7 @@
 using System.Collections;
 
 public class StreamWelcomeMovieManager : MonoBehaviour {
+	/*
 	private MovieTexture movieTexture;
 	private static readonly string url = "https://dl.dropboxusercontent.com/u/62976696/VideoStreamingTest/sample_scene.ogv";
 
@@ -29,4 +30,5 @@ public class StreamWelcomeMovieManager : MonoBehaviour {
 	    movieTexture.Play();
     	//GetComponent<AudioSource>().Play();
 	}
+	*/
 }
