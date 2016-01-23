@@ -2,12 +2,12 @@
 using UnityEngine.UI;
 using System.Collections;
 
-
+//TODO : This have 6 TODO.
 public class BeforePlayController : MonoBehaviour {
 
-	[SerializeField] private RectTransform topArea;
-	[SerializeField] private RectTransform bottomArea;
-	[SerializeField] private RectTransform descriptionArea;
+	[SerializeField] private RectTransform topArea; //TODO : It can be cached.
+	[SerializeField] private RectTransform bottomArea; //TODO : It can be cached.
+	[SerializeField] private RectTransform descriptionArea; //TODO : It can be cached.
 	[SerializeField] private ScrollRect scrollRect;
 	[SerializeField] private CanvasGroup videoInfo;
 	private float startDisappearPoint = 0.2f;
@@ -44,12 +44,12 @@ public class BeforePlayController : MonoBehaviour {
 		preferedDescriptionAreaHeight = topAreaHeight - minTopAreaHeight;
 
 		//Set BottomArea Height
-		Vector2 bottomSD = bottomArea.sizeDelta;
+		Vector2 bottomSD = bottomArea.sizeDelta; //TODO : It can be cached.
 		bottomSD.y = topAreaHeight + preferedDescriptionAreaHeight;
 		bottomArea.sizeDelta = bottomSD;
 
 		//Set DescriptionArea Height
-		Vector2 descriptionSD = descriptionArea.sizeDelta;
+		Vector2 descriptionSD = descriptionArea.sizeDelta; //TODO : It can be cached.
 		descriptionSD.y = preferedDescriptionAreaHeight;
 		descriptionArea.sizeDelta = descriptionSD;
 	}
