@@ -6,7 +6,6 @@ using System.Collections;
 [RequireComponent (typeof (Toggle))]
 public class PlayToggleManager : MonoBehaviour {
 	private Toggle toggle;
-	[SerializeField] private Image bgImage;
 
 	// Use this for initialization
 	void Start () {

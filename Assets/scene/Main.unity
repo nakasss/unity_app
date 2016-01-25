@@ -382,7 +382,6 @@ GameObject:
   m_Component:
   - 224: {fileID: 49548818}
   - 222: {fileID: 49548820}
-  - 114: {fileID: 49548819}
   m_Layer: 5
   m_Name: PlayButtonArea
   m_TagString: Untagged
@@ -408,18 +407,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: .5, y: .5}
---- !u!114 &49548819
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 49548817}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1184210157, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_AllowSwitchOff: 0
 --- !u!222 &49548820
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -835,7 +822,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: .899999976
-  m_Text: 12:11
+  m_Text: 00:00
 --- !u!222 &141648675
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1800,7 +1787,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: e3daff82f2ac54856ad54bf493cbece1, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: e3daff82f2ac54856ad54bf493cbece1, type: 3}
@@ -2786,6 +2773,156 @@ MonoBehaviour:
   m_EffectColor: {r: 0, g: 0, b: 0, a: .5}
   m_EffectDistance: {x: 0, y: -2}
   m_UseGraphicAlpha: 1
+--- !u!1001 &628416350
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 400000, guid: e3daff82f2ac54856ad54bf493cbece1, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: e3daff82f2ac54856ad54bf493cbece1, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: e3daff82f2ac54856ad54bf493cbece1, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: e3daff82f2ac54856ad54bf493cbece1, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: e3daff82f2ac54856ad54bf493cbece1, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: e3daff82f2ac54856ad54bf493cbece1, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: e3daff82f2ac54856ad54bf493cbece1, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: e3daff82f2ac54856ad54bf493cbece1, type: 3}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2300000, guid: e3daff82f2ac54856ad54bf493cbece1, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 9051fb2adb57041198fabeefca30edde, type: 2}
+    - target: {fileID: 400000, guid: e3daff82f2ac54856ad54bf493cbece1, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1000
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: e3daff82f2ac54856ad54bf493cbece1, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1000
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: e3daff82f2ac54856ad54bf493cbece1, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1000
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: e3daff82f2ac54856ad54bf493cbece1, type: 3}
+      propertyPath: m_Name
+      value: PlayVRScreen
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: e3daff82f2ac54856ad54bf493cbece1, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: e3daff82f2ac54856ad54bf493cbece1, type: 3}
+  m_IsPrefabParent: 0
+--- !u!1 &628416351 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 100000, guid: e3daff82f2ac54856ad54bf493cbece1, type: 3}
+  m_PrefabInternal: {fileID: 628416350}
+--- !u!82 &628416352
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 628416351}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+--- !u!114 &628416353
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 628416351}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 495f999705ac94d53ade311bc8d03439, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &637446079
 GameObject:
   m_ObjectHideFlags: 0
@@ -2859,7 +2996,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
 --- !u!1 &645340939
 GameObject:
   m_ObjectHideFlags: 0
@@ -3505,7 +3642,7 @@ RectTransform:
   - {fileID: 454492346}
   - {fileID: 1275974977}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
@@ -5478,6 +5615,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 224: {fileID: 1275974977}
+  - 114: {fileID: 1275974978}
   m_Layer: 5
   m_Name: PlayContent
   m_TagString: Untagged
@@ -5504,6 +5642,22 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: .5, y: .5}
+--- !u!114 &1275974978
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1275974976}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34b5946bc70f040c0afad6a2884abafb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tergetScreen: {fileID: 628416351}
+  playButton: {fileID: 2036273638}
+  videoProgressBar: {fileID: 1985154184}
+  timeLabel: {fileID: 141648674}
+  isDragging: 0
 --- !u!1 &1282403631
 GameObject:
   m_ObjectHideFlags: 0
@@ -5969,6 +6123,7 @@ GameObject:
   - 222: {fileID: 1349356704}
   - 114: {fileID: 1349356703}
   - 114: {fileID: 1349356705}
+  - 114: {fileID: 1349356706}
   m_Layer: 5
   m_Name: Handle
   m_TagString: Untagged
@@ -5988,10 +6143,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 852311839}
   m_RootOrder: 0
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMin: {x: .296999991, y: 0}
+  m_AnchorMax: {x: .296999991, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 10.8919973, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: .5, y: .5}
 --- !u!114 &1349356703
 MonoBehaviour:
@@ -6033,6 +6188,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_AspectMode: 2
   m_AspectRatio: 1
+--- !u!114 &1349356706
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1349356701}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29224aa8a6574451c99d07c9b84c5209, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1355141867
 GameObject:
   m_ObjectHideFlags: 0
@@ -8115,8 +8281,9 @@ GameObject:
   m_Component:
   - 224: {fileID: 1985154183}
   - 114: {fileID: 1985154184}
+  - 114: {fileID: 1985154185}
   m_Layer: 5
-  m_Name: Slider
+  m_Name: VideoProgressBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8184,12 +8351,24 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: .296999991
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
     m_TypeName: UnityEngine.UI.Slider+SliderEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!114 &1985154185
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1985154182}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 549eb82c302424c76bebec043e4d50ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playContentManager: {fileID: 1275974978}
 --- !u!1 &2007534377
 GameObject:
   m_ObjectHideFlags: 0
@@ -8233,6 +8412,7 @@ GameObject:
   m_Component:
   - 224: {fileID: 2036273637}
   - 114: {fileID: 2036273638}
+  - 114: {fileID: 2036273639}
   m_Layer: 5
   m_Name: Play
   m_TagString: Untagged
@@ -8299,10 +8479,43 @@ MonoBehaviour:
   m_Group: {fileID: 0}
   onValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2036273639}
+        m_MethodName: ChangeToggleBGAlpha
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1275974978}
+        m_MethodName: OnPlayButtonChanged
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Toggle+ToggleEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
   m_IsOn: 0
+--- !u!114 &2036273639
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2036273636}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba7c5d9ab8fea432990a5c0db93403e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2050233740
 GameObject:
   m_ObjectHideFlags: 0
