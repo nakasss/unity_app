@@ -17,7 +17,7 @@ public class ProgressBarDragManager : MonoBehaviour, IBeginDragHandler, IDragHan
 	}
 
 	public void OnBeginDrag(PointerEventData eventData) {
-		playContentManager.isDragging = true;
+		playContentManager.BeginDraggingValueChangeCheck();
 	}
 
 	public void OnDrag(PointerEventData pointerEventData) {
@@ -25,6 +25,6 @@ public class ProgressBarDragManager : MonoBehaviour, IBeginDragHandler, IDragHan
     }
 
 	public void OnEndDrag(PointerEventData eventData) {
-		playContentManager.isDragging = false;
+		playContentManager.EndDraggingValueChangeCheck();
 	}
 }

@@ -15,12 +15,10 @@ public class PlayContentManager : MonoBehaviour {
 	private float videoDuration = -1.0f;
 
 	//Timer 
-	private float timer = 0.0f;
-	private float minutesNum = 0.0f;
-	private float secondsNum = 0.0f;
+	private float progressTimer = 0.0f;
 
 	//Progress Bar
-	[HideInInspector] public bool isDragging = false; //This valiable is modified in ProgressBarDragManager.cs
+	private bool isDragging = false; //This valiable is modified in ProgressBarDragManager.cs
 
 
 	// Use this for initialization
@@ -30,6 +28,7 @@ public class PlayContentManager : MonoBehaviour {
 		OffPlayButton();
 		//init Progress Bar
 		SetSliderValue(0.0f);
+		videoProgressBar.onValueChanged.AddListener(delegate {DraggingValueChangeCheck();});
 		//init Timer Label
 		SetTimeText("00:00");
 		audioSource = tergetScreen.GetComponent<AudioSource>();
@@ -40,11 +39,7 @@ public class PlayContentManager : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		TimerCountUp();
-		//GoProgressBar();
-
-		if (isDragging) {
-			Debug.Log("Dragging");
-		}
+		GoProgressBar();
 	}
 
 
@@ -90,28 +85,27 @@ public class PlayContentManager : MonoBehaviour {
 
 	// Time Label
 	void TimerCountUp () {
-		if (!IsVideoPlaying()) return;
+		if (!IsVideoPlaying() || isDragging) return;
 
+		progressTimer += Time.deltaTime;
+		SetTimeTextByDeltaTime(progressTimer);
+	}
+
+	void SetTimeTextByDeltaTime (float timer) {
 		string timeText = "";
-		float deltaTime = Time.deltaTime;
-		timer += deltaTime;
-		secondsNum += deltaTime;
-
-		if (secondsNum > 60.0f) {
-			minutesNum += 1.0f;
-			secondsNum = 0.0f;
-		}
+		float minute = timer / 60.0f;
+		float second = timer % 60.0f;
 
 		//generate time string
-		if (minutesNum < 10.0f) {
+		if (minute < 10.0f) {
 			timeText += "0";
 		}
-		timeText += ((int)minutesNum).ToString() + ":";
+		timeText += ((int)minute).ToString() + ":";
 
-		if (secondsNum < 10.0f) {
+		if (second < 10.0f) {
 			timeText += "0";
 		}
-		timeText += ((int)secondsNum).ToString();
+		timeText += ((int)second).ToString();
 		
 		SetTimeText(timeText);
 	}
@@ -120,13 +114,33 @@ public class PlayContentManager : MonoBehaviour {
 		timeLabel.text = text;	
 	}
 
+
 	// Progress Bar
 	void GoProgressBar () {
-		if (!IsVideoPlaying() || videoDuration == -1.0f) return;
+		if (!IsVideoPlaying() || isDragging || videoDuration == -1.0f) return;
 
 		//set progress with Timer
-		float progressValue = timer / videoDuration;
+		float progressValue = progressTimer / videoDuration;
 		SetSliderValue(progressValue);
+	}
+	//Called in ProgressBarDragManager.cs
+	public void BeginDraggingValueChangeCheck () {
+		isDragging = true;
+		Debug.Log("Begin Drag");
+	}
+	//Called in ProgressBarDragManager.cs
+	public void EndDraggingValueChangeCheck () {
+		isDragging = false;
+		Debug.Log("End Drag");
+	}
+	// Event Attached to videoProgressBar
+	public void DraggingValueChangeCheck () {
+		if (!isDragging) return;
+
+		//get progress pointing time
+		progressTimer = videoDuration * videoProgressBar.value;
+
+		SetTimeTextByDeltaTime(progressTimer);
 	}
 
 	void SetSliderValue (float value) {
@@ -157,6 +171,8 @@ public class PlayContentManager : MonoBehaviour {
 		while (!deskMovie.isReadyToPlay) {
 	    	yield return null;
 	    }
+
+	    Debug.Log("Duration : " + deskMovie.duration.ToString());
 
 	    //Set Movie
 		tergetScreen.GetComponent<Renderer>().material.mainTexture = deskMovie;
