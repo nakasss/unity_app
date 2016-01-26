@@ -4,7 +4,8 @@ using System.Collections;
 
 
 public class PlayContentManager : MonoBehaviour {
-	private static readonly string targetURL = "https://dl.dropboxusercontent.com/u/62976696/VideoStreamingTest/sample_scene.ogv";
+	private static readonly string baseURL = "https://dl.dropboxusercontent.com/u/62976696/VideoStreamingTest/";
+	private string videoName = "sample_scene";
 
 	[SerializeField] private GameObject tergetScreen;
 	[SerializeField] private Toggle playButton;
@@ -15,12 +16,10 @@ public class PlayContentManager : MonoBehaviour {
 	private float videoDuration = -1.0f;
 
 	//Timer 
-	private float timer = 0.0f;
-	private float minutesNum = 0.0f;
-	private float secondsNum = 0.0f;
+	private float progressTimer = 0.0f;
 
 	//Progress Bar
-	[HideInInspector] public bool isDragging = false; //This valiable is modified in ProgressBarDragManager.cs
+	private bool isDragging = false; //This valiable is modified in ProgressBarDragManager.cs
 
 
 	// Use this for initialization
@@ -30,34 +29,22 @@ public class PlayContentManager : MonoBehaviour {
 		OffPlayButton();
 		//init Progress Bar
 		SetSliderValue(0.0f);
+		videoProgressBar.onValueChanged.AddListener(delegate {DraggingValueChangeCheck();});
 		//init Timer Label
 		SetTimeText("00:00");
+		//Get AudioSource
 		audioSource = tergetScreen.GetComponent<AudioSource>();
 
-		LoadVideo(targetURL);
+
+		LoadVideo(videoName);
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		TimerCountUp();
-		//GoProgressBar();
-
-		if (isDragging) {
-			Debug.Log("Dragging");
-		}
+		GoProgressBar();
 	}
 
-
-
-	bool IsVideoReady () {
-		bool flag = deskMovie.isReadyToPlay;
-		return flag;
-	}
-
-	bool IsVideoPlaying () {
-		bool flag = deskMovie.isPlaying;
-		return flag;
-	}
 
 
 
@@ -69,10 +56,10 @@ public class PlayContentManager : MonoBehaviour {
 	void OnPlayButtonChanged (bool isOn) {
 		if (isOn) {
 			//Resume
-			ResumeDeskMovie();
+			Resume();
 		} else {
 			//Pause
-			PauseDeskMovie();
+			Pause();
 		}
 	}
 	void EnablePlayButton () {
@@ -90,28 +77,27 @@ public class PlayContentManager : MonoBehaviour {
 
 	// Time Label
 	void TimerCountUp () {
-		if (!IsVideoPlaying()) return;
+		if (!IsVideoPlaying() || isDragging) return;
 
+		progressTimer += Time.deltaTime;
+		SetTimeTextByDeltaTime(progressTimer);
+	}
+
+	void SetTimeTextByDeltaTime (float timer) {
 		string timeText = "";
-		float deltaTime = Time.deltaTime;
-		timer += deltaTime;
-		secondsNum += deltaTime;
-
-		if (secondsNum > 60.0f) {
-			minutesNum += 1.0f;
-			secondsNum = 0.0f;
-		}
+		float minute = timer / 60.0f;
+		float second = timer % 60.0f;
 
 		//generate time string
-		if (minutesNum < 10.0f) {
+		if (minute < 10.0f) {
 			timeText += "0";
 		}
-		timeText += ((int)minutesNum).ToString() + ":";
+		timeText += ((int)minute).ToString() + ":";
 
-		if (secondsNum < 10.0f) {
+		if (second < 10.0f) {
 			timeText += "0";
 		}
-		timeText += ((int)secondsNum).ToString();
+		timeText += ((int)second).ToString();
 		
 		SetTimeText(timeText);
 	}
@@ -120,13 +106,34 @@ public class PlayContentManager : MonoBehaviour {
 		timeLabel.text = text;	
 	}
 
+
 	// Progress Bar
 	void GoProgressBar () {
-		if (!IsVideoPlaying() || videoDuration == -1.0f) return;
+		if (!IsVideoPlaying() || isDragging || videoDuration == -1.0f) return;
 
 		//set progress with Timer
-		float progressValue = timer / videoDuration;
+		float progressValue = progressTimer / videoDuration;
 		SetSliderValue(progressValue);
+	}
+	//Called in ProgressBarDragManager.cs
+	public void BeginDraggingValueChangeCheck () {
+		isDragging = true;
+	}
+	//Called in ProgressBarDragManager.cs
+	public void EndDraggingValueChangeCheck () {
+		isDragging = false;
+
+		//Restart on Editor
+		Restart();
+	}
+	// Event Attached to videoProgressBar
+	public void DraggingValueChangeCheck () {
+		if (!isDragging) return;
+
+		//get progress pointing time
+		progressTimer = videoDuration * videoProgressBar.value;
+
+		SetTimeTextByDeltaTime(progressTimer);
 	}
 
 	void SetSliderValue (float value) {
@@ -139,18 +146,127 @@ public class PlayContentManager : MonoBehaviour {
 	/*
 	 *  Common Video Manager
 	 */
-	void LoadVideo (string url) {
-		StartCoroutine(LoadDeskMovieByWWW(url));
+	void LoadVideo (string video) {
+		string url = "";
+		if (Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer) {
+			url = baseURL + video + ".mp4";
+		} else {
+			url = baseURL + video + ".ogv";
+		}
+
+		#if UNITY_EDITOR
+		StartCoroutine(LoadDeskMovie(url));
+		#elif UNITY_IPHONE || 	UNITY_ANDROID
+		
+		#endif
 	}
+
+	void Resume () {
+		#if UNITY_EDITOR
+		ResumeDeskMovie();
+		#elif UNITY_IPHONE || 	UNITY_ANDROID
+		
+		#endif
+	}
+
+	void Pause () {
+		#if UNITY_EDITOR
+		PauseDeskMovie();
+		#elif UNITY_IPHONE || 	UNITY_ANDROID
+		
+		#endif
+	}
+
+	void JumpTo (int position) {
+
+	}
+
+	void Restart () {
+		//Init UI
+		progressTimer = 0.0f;
+		DisablePlayButton();
+		OffPlayButton();
+		SetTimeText("00:00");
+		SetSliderValue(0.0f);
+
+		//Start Video
+		#if UNITY_EDITOR
+		ReplayDeskMovieFromBegin();
+		#elif UNITY_IPHONE || 	UNITY_ANDROID
+
+		#endif
+		
+		//Start UI
+		EnablePlayButton();
+		OnPlayButton();
+	}
+
+	bool IsVideoReady () {
+		bool flag = true;
+		#if UNITY_EDITOR
+		flag = deskMovie.isReadyToPlay;
+		#elif UNITY_IPHONE || 	UNITY_ANDROID
+
+		#endif
+		return flag;
+	}
+
+	bool IsVideoPlaying () {
+		bool flag = true;
+		#if UNITY_EDITOR
+		flag = deskMovie.isPlaying;
+		#elif UNITY_IPHONE || 	UNITY_ANDROID
+
+		#endif
+		return flag;
+	}
+
+
+
+
+	/*
+	 *  Video Manager for Mobile
+	 */
+	[SerializeField] private MediaPlayerCtrl easyMovieTexture;
+	void LoadMobileMovie (string url) {
+		//modify easy movie setting
+		easyMovieTexture.m_bLoop = false;
+		easyMovieTexture.m_bAutoPlay = false;
+
+		//set Target Material
+		easyMovieTexture.m_TargetMaterial = new GameObject[]{tergetScreen};
+
+		//Load Movie
+		easyMovieTexture.Load(url);
+
+		//Detect when video is ready//
+		easyMovieTexture.OnReady = () => {
+			//Enable Play Button
+			OnPlayButton();
+			EnablePlayButton();
+
+			easyMovieTexture.SetVolume(0.0f);
+			StartPlayMobileMovie();
+		};
+
+		//Play Video
+		easyMovieTexture.Play();
+	}
+
+	void StartPlayMobileMovie () {
+		easyMovieTexture.Play();
+	}
+
 
 
 
 	/*
 	 *  Video Manager for Desktop
 	 */
+	#if UNITY_EDITOR
 	private MovieTexture deskMovie;
 	//Load Movie
-	IEnumerator LoadDeskMovieByWWW (string url) {
+	IEnumerator LoadDeskMovie (string url) {
 		WWW www = new WWW(url);
 		deskMovie = www.movie;
 
@@ -204,4 +320,7 @@ public class PlayContentManager : MonoBehaviour {
 		//Start
 		StartPlayDeskMovie();
 	}
+	#endif
+
+
 }
