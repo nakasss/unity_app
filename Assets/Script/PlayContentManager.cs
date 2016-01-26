@@ -6,20 +6,31 @@ using System.Collections;
 public class PlayContentManager : MonoBehaviour {
 	private static readonly string baseURL = "https://dl.dropboxusercontent.com/u/62976696/VideoStreamingTest/";
 	private string videoName = "sample_scene";
+	private float videoDuration = 98.0f; //TODO : It have to ge got by API and it has to be ms.
 
 	[SerializeField] private GameObject tergetScreen;
 	[SerializeField] private Toggle playButton;
 	[SerializeField] private Slider videoProgressBar;
 	[SerializeField] private Text timeLabel;
+	[SerializeField] private Text totalTimeLabel;
+	[SerializeField] private CanvasGroup playUIGroup;
+	[SerializeField] private Canvas rootCanvas;
 
 	private AudioSource audioSource;
-	private float videoDuration = -1.0f;
 
 	//Timer 
 	private float progressTimer = 0.0f;
-
 	//Progress Bar
 	private bool isDragging = false; //This valiable is modified in ProgressBarDragManager.cs
+	//PlayUIGroup Alpha Animation
+	private bool isAlphaAnimating = false;
+	private bool isUpAlpha = false;
+	private float originAlpha = 0.0f;
+	private float destAlpha = 0.0f;
+	private AnimationCurve dissolveAnimationCurve = null;
+	//Screen Touch
+	private float cameraDistance;
+
 
 
 	// Use this for initialization
@@ -27,22 +38,38 @@ public class PlayContentManager : MonoBehaviour {
 		//init Playbutton
 		DisablePlayButton();
 		OffPlayButton();
+		DisableProgressBar();
 		//init Progress Bar
 		SetSliderValue(0.0f);
 		videoProgressBar.onValueChanged.AddListener(delegate {DraggingValueChangeCheck();});
 		//init Timer Label
 		SetTimeText("00:00");
+		//Set Total Time
+		totalTimeLabel.text = GetTimeTextByDeltaTime(videoDuration);
 		//Get AudioSource
 		audioSource = tergetScreen.GetComponent<AudioSource>();
+		//Get Screen Distance
+		cameraDistance = rootCanvas.planeDistance;
 
-
+		//Start Load Video
 		LoadVideo(videoName);
 	}
 	
 	// Update is called once per frame
 	void Update () {
+		OnScreenTouch();
+	}
+
+	//Mainly used for Animation
+	void LateUpdate() {
+		//Time count up
 		TimerCountUp();
+
+		//Update progress bar
 		GoProgressBar();
+
+		//UI Group Dissolve Animation
+		ChangeUIGroupAlpha();
 	}
 
 
@@ -80,10 +107,9 @@ public class PlayContentManager : MonoBehaviour {
 		if (!IsVideoPlaying() || isDragging) return;
 
 		progressTimer += Time.deltaTime;
-		SetTimeTextByDeltaTime(progressTimer);
+		SetTimeText(GetTimeTextByDeltaTime(progressTimer));
 	}
-
-	void SetTimeTextByDeltaTime (float timer) {
+	string GetTimeTextByDeltaTime (float timer) {
 		string timeText = "";
 		float minute = timer / 60.0f;
 		float second = timer % 60.0f;
@@ -99,13 +125,12 @@ public class PlayContentManager : MonoBehaviour {
 		}
 		timeText += ((int)second).ToString();
 		
-		SetTimeText(timeText);
+		return timeText;
 	}
 
 	void SetTimeText (string text) {
 		timeLabel.text = text;	
 	}
-
 
 	// Progress Bar
 	void GoProgressBar () {
@@ -124,7 +149,7 @@ public class PlayContentManager : MonoBehaviour {
 		isDragging = false;
 
 		//Restart on Editor
-		Restart();
+		JumpTo(progressTimer);
 	}
 	// Event Attached to videoProgressBar
 	public void DraggingValueChangeCheck () {
@@ -133,11 +158,99 @@ public class PlayContentManager : MonoBehaviour {
 		//get progress pointing time
 		progressTimer = videoDuration * videoProgressBar.value;
 
-		SetTimeTextByDeltaTime(progressTimer);
+		SetTimeText(GetTimeTextByDeltaTime(progressTimer));
 	}
-
+	void EnableProgressBar () {
+		videoProgressBar.enabled = true;
+	}
+	void DisableProgressBar () {
+		videoProgressBar.enabled = false;
+	}
 	void SetSliderValue (float value) {
 		videoProgressBar.value = value;
+	}
+
+	//Play UI Group
+	void TogglePlayUIGroupAlpha () {
+		if (playUIGroup.interactable) {
+			DownUIGroupAlpha();
+		} else {
+			UpUIGroupAlpha();
+		}
+
+		playUIGroup.interactable = !playUIGroup.interactable;
+	}
+	void DownUIGroupAlpha () {
+		if (playUIGroup.alpha == 0.0f) return;
+
+		SetDissolveAnimationCurve();
+
+		originAlpha = playUIGroup.alpha;
+		isUpAlpha = false;
+		isAlphaAnimating = true;
+	}
+	void UpUIGroupAlpha () {
+		if (playUIGroup.alpha == 1.0f) return;
+
+		SetDissolveAnimationCurve();
+
+		originAlpha = playUIGroup.alpha;
+		isUpAlpha = true;
+		isAlphaAnimating = true;
+	}
+	void SetDissolveAnimationCurve () {
+		float animationDuration = 0.2f;
+		float key1InTangent = 0.0f;
+		float key1OutTangent = 0.1f;
+		float key2InTangent = 0.0f;
+		float key2OutTangent = 0.0f;
+
+		Keyframe keyFrame1 = new Keyframe(Time.time, 0.0f, key1InTangent, key1OutTangent);
+		Keyframe keyFrame2 = new Keyframe(Time.time + animationDuration, 1.0f, key2InTangent, key2OutTangent);
+		dissolveAnimationCurve = new AnimationCurve(keyFrame1, keyFrame2);
+	}
+	void ChangeUIGroupAlpha () {
+		if (!isAlphaAnimating || dissolveAnimationCurve == null) {
+			return;
+		}
+		if (Time.time >= dissolveAnimationCurve.keys[dissolveAnimationCurve.length-1].time) {
+			//Finish Animation
+			isAlphaAnimating = false;
+			return;
+		}
+
+		float newAlphaValue = 1.0f * dissolveAnimationCurve.Evaluate(Time.time);
+		if (isUpAlpha) {
+			playUIGroup.alpha = originAlpha + (1.0f * dissolveAnimationCurve.Evaluate(Time.time));
+		} else {
+			playUIGroup.alpha = originAlpha - (1.0f * dissolveAnimationCurve.Evaluate(Time.time));
+		}
+	}
+
+	//Screen Touch
+	public void OnScreenTouch() {
+
+
+		if ((Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Ended) || Input.GetMouseButtonUp(0)) {
+			//TogglePlayUIGroupAlpha();
+			GetTouchedObjectName(Input.mousePosition);
+		}
+	}
+
+	string GetTouchedObjectName (Vector3 touchedPos) {
+		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+		Debug.DrawRay(ray.origin, ray.direction * 10, Color.yellow);
+		RaycastHit hit = new RaycastHit();
+
+		string objectName = "";
+		if (Physics.Raycast(ray.origin,ray.direction,out hit,Mathf.Infinity)) {
+        	objectName = hit.collider.gameObject.name;
+        	Debug.Log("Object name : " + objectName);
+      	} else {
+      		Debug.Log("Object name : can't get");
+      	}
+
+      	return objectName;
 	}
 
 
@@ -156,29 +269,36 @@ public class PlayContentManager : MonoBehaviour {
 
 		#if UNITY_EDITOR
 		StartCoroutine(LoadDeskMovie(url));
-		#elif UNITY_IPHONE || 	UNITY_ANDROID
-		
+		#elif UNITY_IPHONE || UNITY_ANDROID
+		LoadMobileMovie(url);
 		#endif
 	}
 
 	void Resume () {
 		#if UNITY_EDITOR
 		ResumeDeskMovie();
-		#elif UNITY_IPHONE || 	UNITY_ANDROID
-		
+		#elif UNITY_IPHONE || UNITY_ANDROID
+		ResumeMobileMovie();
 		#endif
 	}
 
 	void Pause () {
 		#if UNITY_EDITOR
 		PauseDeskMovie();
-		#elif UNITY_IPHONE || 	UNITY_ANDROID
-		
+		#elif UNITY_IPHONE || UNITY_ANDROID
+		PauseMobileMovie();
 		#endif
 	}
 
-	void JumpTo (int position) {
+	void JumpTo (float sec) {
+		//sec to msec
+		int msec = (int)(sec * 1000);
 
+		#if UNITY_EDITOR
+		Restart();
+		#elif UNITY_IPHONE || UNITY_ANDROID
+		JumpToMovileMovie(msec);
+		#endif
 	}
 
 	void Restart () {
@@ -189,11 +309,11 @@ public class PlayContentManager : MonoBehaviour {
 		SetTimeText("00:00");
 		SetSliderValue(0.0f);
 
-		//Start Video
+		//Restart Video
 		#if UNITY_EDITOR
 		ReplayDeskMovieFromBegin();
-		#elif UNITY_IPHONE || 	UNITY_ANDROID
-
+		#elif UNITY_IPHONE || UNITY_ANDROID
+		ReplayMobileMovieFromBegin();
 		#endif
 		
 		//Start UI
@@ -202,23 +322,19 @@ public class PlayContentManager : MonoBehaviour {
 	}
 
 	bool IsVideoReady () {
-		bool flag = true;
 		#if UNITY_EDITOR
-		flag = deskMovie.isReadyToPlay;
-		#elif UNITY_IPHONE || 	UNITY_ANDROID
-
+		return deskMovie.isReadyToPlay;
+		#elif UNITY_IPHONE || UNITY_ANDROID
+		return IsMobileMovieReady();
 		#endif
-		return flag;
 	}
 
 	bool IsVideoPlaying () {
-		bool flag = true;
 		#if UNITY_EDITOR
-		flag = deskMovie.isPlaying;
-		#elif UNITY_IPHONE || 	UNITY_ANDROID
-
+		return deskMovie.isPlaying;
+		#elif UNITY_IPHONE || UNITY_ANDROID
+		return IsPlayingMobileMovie();
 		#endif
-		return flag;
 	}
 
 
@@ -227,6 +343,7 @@ public class PlayContentManager : MonoBehaviour {
 	/*
 	 *  Video Manager for Mobile
 	 */
+	#if UNITY_IPHONE || UNITY_ANDROID
 	[SerializeField] private MediaPlayerCtrl easyMovieTexture;
 	void LoadMobileMovie (string url) {
 		//modify easy movie setting
@@ -244,18 +361,56 @@ public class PlayContentManager : MonoBehaviour {
 			//Enable Play Button
 			OnPlayButton();
 			EnablePlayButton();
+			EnableProgressBar();
 
-			easyMovieTexture.SetVolume(0.0f);
 			StartPlayMobileMovie();
 		};
-
-		//Play Video
-		easyMovieTexture.Play();
 	}
 
 	void StartPlayMobileMovie () {
 		easyMovieTexture.Play();
 	}
+
+	void PauseMobileMovie () {
+		easyMovieTexture.Pause();
+	}
+
+	void ResumeMobileMovie () {
+		easyMovieTexture.Play();
+	}
+
+	void ReplayMobileMovieFromBegin () {
+		//Stop Video and Rewind
+		easyMovieTexture.Stop();
+
+		//Start
+		StartPlayMobileMovie();
+	}
+
+	void JumpToMovileMovie (int msec) {
+		easyMovieTexture.SeekTo(msec);
+
+		if (!IsPlayingMobileMovie()) {
+			//Update first frame
+		}
+	}
+
+	bool IsPlayingMobileMovie () {
+		if (easyMovieTexture.GetCurrentState() == MediaPlayerCtrl.MEDIAPLAYER_STATE.PLAYING) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	bool IsMobileMovieReady () {
+		if (easyMovieTexture.GetCurrentState() != MediaPlayerCtrl.MEDIAPLAYER_STATE.NOT_READY && easyMovieTexture.GetCurrentState() != MediaPlayerCtrl.MEDIAPLAYER_STATE.ERROR) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	#endif
 
 
 
@@ -279,7 +434,7 @@ public class PlayContentManager : MonoBehaviour {
 		//Set Audio
 		audioSource.clip = deskMovie.audioClip;
 		//Get Duration
-		videoDuration = deskMovie.duration;
+		//videoDuration = deskMovie.duration;
 		//deactive loop
 		deskMovie.loop = false;
 		audioSource.loop = false;
@@ -287,6 +442,7 @@ public class PlayContentManager : MonoBehaviour {
 		//Enable Play Button
 		OnPlayButton();
 		EnablePlayButton();
+		EnableProgressBar();
 
 		//StartPlay
 		StartPlayDeskMovie();
