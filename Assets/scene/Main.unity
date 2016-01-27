@@ -2154,8 +2154,8 @@ CanvasGroup:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 438472408}
   m_Enabled: 1
-  m_Alpha: 0
-  m_Interactable: 0
+  m_Alpha: 1
+  m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
 --- !u!1 &454492345
@@ -6331,6 +6331,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tergetScreen: {fileID: 628416351}
   playButton: {fileID: 2036273638}
+  playButtonWrapper: {fileID: 438472410}
+  videoEndButtonsWrapper: {fileID: 1901703245}
   videoProgressBar: {fileID: 1985154184}
   timeLabel: {fileID: 141648674}
   totalTimeLabel: {fileID: 1498035631}
@@ -9130,6 +9132,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 224: {fileID: 1901703244}
+  - 225: {fileID: 1901703245}
   m_Layer: 5
   m_Name: AfterVideoEndButtonsWrapper
   m_TagString: Untagged
@@ -9157,6 +9160,17 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: .5, y: .5}
+--- !u!225 &1901703245
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1901703243}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
 --- !u!1 &1906707282
 GameObject:
   m_ObjectHideFlags: 0

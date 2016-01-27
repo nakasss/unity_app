@@ -5,8 +5,8 @@ using System.Collections;
 
 public class PlayContentManager : MonoBehaviour {
 	private static readonly string baseURL = "https://dl.dropboxusercontent.com/u/62976696/VideoStreamingTest/";
-	private string videoName = "sample_scene";
-	private float videoDuration = 98.0f; //TODO : It have to ge got by API and it has to be ms.
+	private string videoName = "sample_logo";
+	private float videoDuration = 8.0f; //TODO : It have to ge got by API and it has to be ms.
 
 	[SerializeField] private GameObject tergetScreen;
 	[SerializeField] private Toggle playButton;
@@ -17,7 +17,12 @@ public class PlayContentManager : MonoBehaviour {
 	[SerializeField] private Text totalTimeLabel;
 	[SerializeField] private CanvasGroup playUIGroup;
 
-	private AudioSource audioSource;
+	//Timer
+	private float progressTimer = 0.0f;
+	//Progress Bar
+	private bool isDragging = false; //This valiable is modified in ProgressBarDragManager.cs
+	//Screen Touch
+	private bool isScreenTouchBlocked = false;
 
 	//PlayUIGroup Alpha Animation
 	private bool isAlphaAnimating = false;
@@ -28,14 +33,7 @@ public class PlayContentManager : MonoBehaviour {
 	private float screenHoldingTime = 0.0f;
 	private bool isUIControlling = false;
 	//PlayButton
-	private AnimationCurve playButtonAniCurve = null;
 	//EndVideoButtons
-	//Timer
-	private float progressTimer = 0.0f;
-	//Progress Bar
-	private bool isDragging = false; //This valiable is modified in ProgressBarDragManager.cs
-	//Screen Touch
-	private bool isScreenTouchBlocked = false;
 
 
 
@@ -56,8 +54,6 @@ public class PlayContentManager : MonoBehaviour {
 		SetTimeText("00:00");
 		//Set Total Time
 		totalTimeLabel.text = GetTimeTextByDeltaTime(videoDuration);
-		//Get AudioSource
-		audioSource = tergetScreen.GetComponent<AudioSource>();
 
 		//Start Load Video
 		LoadVideo(videoName);
@@ -82,6 +78,11 @@ public class PlayContentManager : MonoBehaviour {
 		OnScreenTouch();
 		//UI Group Dissolve Animation
 		ChangeUIGroupAlpha();
+
+		#if UNITY_EDITOR
+		//Detect Desk Movie End
+		DetectDeskMovieEnd();
+		#endif
 	}
 
 
@@ -195,6 +196,34 @@ public class PlayContentManager : MonoBehaviour {
 		isScreenTouchBlocked = true;
 	}
 
+	// Middle Buttons
+	void ToggleMiddleButtonsWithoutAnimation () {
+
+		if (playButtonWrapper.interactable) {
+			//Deactivate Play Button
+			playButtonWrapper.alpha = 0.0f;
+			playButtonWrapper.interactable = false;
+			playButtonWrapper.blocksRaycasts = false;
+
+			//Activate End Video Button
+			videoEndButtonsWrapper.alpha = 1.0f;
+			videoEndButtonsWrapper.interactable = true;
+			videoEndButtonsWrapper.blocksRaycasts = true;
+		} else {
+			//Activate Play Button
+			playButtonWrapper.alpha = 1.0f;
+			playButtonWrapper.interactable = true;
+			playButtonWrapper.blocksRaycasts = true;
+
+			//Deactivate End Video Button
+			videoEndButtonsWrapper.alpha = 0.0f;
+			videoEndButtonsWrapper.interactable = false;
+			videoEndButtonsWrapper.blocksRaycasts = false;
+		}
+	}
+	void ToggleMiddleButtonsWithAnimation () {
+	}
+
 	// Play Button
 	// Play Button Event Method
 	void OnPlayButtonChanged (bool isOn) {
@@ -204,27 +233,6 @@ public class PlayContentManager : MonoBehaviour {
 		} else {
 			//Pause
 			Pause();
-		}
-	}
-	void ChangePlayButtonAlpha () {
-		if (!isAlphaAnimating || dissolveAnimationCurve == null) {
-			return;
-		}
-
-		if (Time.time >= dissolveAnimationCurve.keys[dissolveAnimationCurve.length-1].time) {
-			//Finish Animation
-			isAlphaAnimating = false;
-			//Adjust Alpha
-			playUIGroup.alpha = isUpAlpha ? 1.0f : 0.0f;
-
-			return;
-		}
-
-		float newAlphaValue = 1.0f * dissolveAnimationCurve.Evaluate(Time.time);
-		if (isUpAlpha) {
-			playUIGroup.alpha = originAlpha + (1.0f * dissolveAnimationCurve.Evaluate(Time.time));
-		} else {
-			playUIGroup.alpha = originAlpha - (1.0f * dissolveAnimationCurve.Evaluate(Time.time));
 		}
 	}
 	void EnablePlayButton () {
@@ -241,7 +249,6 @@ public class PlayContentManager : MonoBehaviour {
 	}
 
 	// Finish Buttons
-
 
 
 	// Time Label
@@ -361,6 +368,14 @@ public class PlayContentManager : MonoBehaviour {
 		#endif
 	}
 
+	void Rewind () {
+		#if UNITY_EDITOR
+		RewindDesktMovie();
+		#elif UNITY_IPHONE || UNITY_ANDROID
+		RewindMobileMovie();
+		#endif		
+	}
+
 	void Restart () {
 		//Init UI
 		progressTimer = 0.0f;
@@ -397,6 +412,20 @@ public class PlayContentManager : MonoBehaviour {
 		#endif
 	}
 
+	void OnVideoEnd () {
+		Debug.Log("Video Finish");
+
+		//Rewind Video
+		Rewind();
+
+		if (playUIGroup.interactable) {
+			ToggleMiddleButtonsWithAnimation();
+		} else {
+			ToggleMiddleButtonsWithoutAnimation();
+			TogglePlayUIGroupAlpha();
+		}
+	}
+
 
 
 
@@ -425,6 +454,12 @@ public class PlayContentManager : MonoBehaviour {
 
 			StartPlayMobileMovie();
 		};
+
+		//Call when mobile movie end
+		easyMovieTexture.OnEnd = () => {
+			//Call OnVideoEnd
+			OnVideoEnd();
+		};
 	}
 
 	void StartPlayMobileMovie () {
@@ -437,6 +472,11 @@ public class PlayContentManager : MonoBehaviour {
 
 	void ResumeMobileMovie () {
 		easyMovieTexture.Play();
+	}
+
+	void RewindMobileMovie () {
+		//Stop Video and Rewind
+		easyMovieTexture.Stop();
 	}
 
 	void ReplayMobileMovieFromBegin () {
@@ -480,6 +520,9 @@ public class PlayContentManager : MonoBehaviour {
 	 */
 	#if UNITY_EDITOR
 	private MovieTexture deskMovie;
+	private AudioSource audioSource;
+	private float timeUntilEnd = 0.0f;
+	private bool isDeskMovieEndDetected = false;
 	//Load Movie
 	IEnumerator LoadDeskMovie (string url) {
 		WWW www = new WWW(url);
@@ -491,6 +534,8 @@ public class PlayContentManager : MonoBehaviour {
 
 	    //Set Movie
 		tergetScreen.GetComponent<Renderer>().material.mainTexture = deskMovie;
+		//Get AudioSource
+		audioSource = tergetScreen.GetComponent<AudioSource>();
 		//Set Audio
 		audioSource.clip = deskMovie.audioClip;
 		//Get Duration
@@ -527,6 +572,12 @@ public class PlayContentManager : MonoBehaviour {
 		}
 	}
 
+	void RewindDesktMovie () {
+		deskMovie.Stop();
+		audioSource.Stop();
+		audioSource.clip = deskMovie.audioClip;
+	}
+
 	void ReplayDeskMovieFromBegin () {
 		//Stop Video and Rewind
 		deskMovie.Stop();
@@ -535,6 +586,26 @@ public class PlayContentManager : MonoBehaviour {
 
 		//Start
 		StartPlayDeskMovie();
+	}
+
+	void DetectDeskMovieEnd () {
+		if (!deskMovie.isPlaying) return;
+
+		if (Mathf.Round(progressTimer) >= videoDuration && !isDeskMovieEndDetected) {
+			timeUntilEnd = 0.0f;
+			isDeskMovieEndDetected = true;
+		}
+
+		//Call VideoEnd After 0.5 sec after rough detect Video end
+		if (isDeskMovieEndDetected) {
+			timeUntilEnd += Time.deltaTime;
+
+			if (timeUntilEnd >= 1f) {
+				isDeskMovieEndDetected = false;
+				timeUntilEnd = 0.0f;
+				OnVideoEnd();				
+			}
+		}
 	}
 	#endif
 
