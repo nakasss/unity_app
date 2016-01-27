@@ -5,8 +5,8 @@ using System.Collections;
 
 public class PlayContentManager : MonoBehaviour {
 	private static readonly string baseURL = "https://dl.dropboxusercontent.com/u/62976696/VideoStreamingTest/";
-	private string videoName = "sample_logo";
-	private float videoDuration = 8.0f; //TODO : It have to ge got by API and it has to be ms.
+	private string videoName = "EYvideo";
+	private float videoDuration = 280.0f; //TODO : It have to ge got by API and it has to be ms.
 
 	[SerializeField] private GameObject tergetScreen;
 	[SerializeField] private Toggle playButton;
@@ -16,6 +16,8 @@ public class PlayContentManager : MonoBehaviour {
 	[SerializeField] private Text timeLabel;
 	[SerializeField] private Text totalTimeLabel;
 	[SerializeField] private CanvasGroup playUIGroup;
+	[SerializeField] private Animator playButtonAnimator;
+	[SerializeField] private Animator endVideoButtonsAnimator;
 
 	//Timer
 	private float progressTimer = 0.0f;
@@ -33,6 +35,7 @@ public class PlayContentManager : MonoBehaviour {
 	private float screenHoldingTime = 0.0f;
 	private bool isUIControlling = false;
 	//PlayButton
+
 	//EndVideoButtons
 
 
@@ -222,6 +225,13 @@ public class PlayContentManager : MonoBehaviour {
 		}
 	}
 	void ToggleMiddleButtonsWithAnimation () {
+		if (playButtonWrapper.interactable) {
+			playButtonAnimator.SetBool("IsAppear", false);
+			endVideoButtonsAnimator.SetBool("IsShow", true);
+		} else {
+			playButtonAnimator.SetBool("IsAppear", true);
+			endVideoButtonsAnimator.SetBool("IsShow", false);
+		}
 	}
 
 	// Play Button
@@ -248,7 +258,14 @@ public class PlayContentManager : MonoBehaviour {
 		playButton.isOn = false;	
 	}
 
-	// Finish Buttons
+	// Replay Button
+	public void OnReplayButtonClicked () {
+		ToggleMiddleButtonsWithAnimation();
+		TogglePlayUIGroupAlpha();
+
+		Restart();
+	}
+
 
 
 	// Time Label
@@ -296,6 +313,13 @@ public class PlayContentManager : MonoBehaviour {
 	//Called in ProgressBarDragManager.cs
 	public void EndDraggingValueChangeCheck () {
 		isDragging = false;
+
+		//Toggle Middle Button
+		//if (IsVideoEnd()) {}
+		if (!playButtonWrapper.interactable) {
+			ToggleMiddleButtonsWithAnimation();
+		}
+		
 
 		//Restart on Editor
 		JumpTo(progressTimer);
@@ -412,16 +436,25 @@ public class PlayContentManager : MonoBehaviour {
 		#endif
 	}
 
-	void OnVideoEnd () {
-		Debug.Log("Video Finish");
+	bool IsVideoEnd () {
+		#if UNITY_EDITOR
+		return IsDeskMovieEnd();
+		#elif UNITY_IPHONE || UNITY_ANDROID
+		return IsEndMobileMovie();
+		#endif
+	}
 
+	void OnVideoEnd () {
 		//Rewind Video
 		Rewind();
 
-		if (playUIGroup.interactable) {
+		OffPlayButton();
+
+		if (playButtonWrapper.interactable) {
 			ToggleMiddleButtonsWithAnimation();
-		} else {
-			ToggleMiddleButtonsWithoutAnimation();
+		}
+
+		if (!playUIGroup.interactable) {
 			TogglePlayUIGroupAlpha();
 		}
 	}
@@ -454,16 +487,18 @@ public class PlayContentManager : MonoBehaviour {
 
 			StartPlayMobileMovie();
 		};
-
-		//Call when mobile movie end
-		easyMovieTexture.OnEnd = () => {
-			//Call OnVideoEnd
-			OnVideoEnd();
-		};
 	}
 
 	void StartPlayMobileMovie () {
 		easyMovieTexture.Play();
+
+		//Call when mobile movie end
+		if (easyMovieTexture.OnEnd == null) {
+			easyMovieTexture.OnEnd = () => {
+				//Call OnVideoEnd
+				OnVideoEnd();
+			};
+		}
 	}
 
 	void PauseMobileMovie () {
@@ -477,11 +512,16 @@ public class PlayContentManager : MonoBehaviour {
 	void RewindMobileMovie () {
 		//Stop Video and Rewind
 		easyMovieTexture.Stop();
+
+		//Reset Call when mobile movie end
+		if (easyMovieTexture.OnEnd != null) {
+			easyMovieTexture.OnEnd = null;
+		}
 	}
 
 	void ReplayMobileMovieFromBegin () {
 		//Stop Video and Rewind
-		easyMovieTexture.Stop();
+		RewindMobileMovie();
 
 		//Start
 		StartPlayMobileMovie();
@@ -492,6 +532,14 @@ public class PlayContentManager : MonoBehaviour {
 
 		if (!IsPlayingMobileMovie()) {
 			//Update first frame
+		}
+
+		//Call when mobile movie end
+		if (easyMovieTexture.OnEnd == null) {
+			easyMovieTexture.OnEnd = () => {
+				//Call OnVideoEnd
+				OnVideoEnd();
+			};
 		}
 	}
 
@@ -505,6 +553,14 @@ public class PlayContentManager : MonoBehaviour {
 
 	bool IsMobileMovieReady () {
 		if (easyMovieTexture.GetCurrentState() != MediaPlayerCtrl.MEDIAPLAYER_STATE.NOT_READY && easyMovieTexture.GetCurrentState() != MediaPlayerCtrl.MEDIAPLAYER_STATE.ERROR) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	bool IsEndMobileMovie () {
+		if (easyMovieTexture.GetCurrentState() == MediaPlayerCtrl.MEDIAPLAYER_STATE.END) {
 			return true;
 		} else {
 			return false;
@@ -580,18 +636,29 @@ public class PlayContentManager : MonoBehaviour {
 
 	void ReplayDeskMovieFromBegin () {
 		//Stop Video and Rewind
-		deskMovie.Stop();
-		audioSource.Stop();
-		audioSource.clip = deskMovie.audioClip;
+		RewindDesktMovie();
+
+		if (!playButtonWrapper.interactable) {
+			ToggleMiddleButtonsWithAnimation();
+		}
 
 		//Start
 		StartPlayDeskMovie();
 	}
 
+	bool IsDeskMovieEnd () {
+
+		if (Mathf.Round(progressTimer) >= videoDuration) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	void DetectDeskMovieEnd () {
 		if (!deskMovie.isPlaying) return;
 
-		if (Mathf.Round(progressTimer) >= videoDuration && !isDeskMovieEndDetected) {
+		if (IsDeskMovieEnd() && !isDeskMovieEndDetected) {
 			timeUntilEnd = 0.0f;
 			isDeskMovieEndDetected = true;
 		}

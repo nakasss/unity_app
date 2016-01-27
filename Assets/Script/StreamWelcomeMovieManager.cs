@@ -42,6 +42,7 @@ public class StreamWelcomeMovieManager : MonoBehaviour {
 	/*
 	 *  Video Manager for Mobile
 	 */
+	 #if UNITY_IPHONE || UNITY_ANDROID
 	[SerializeField] private MediaPlayerCtrl easyMovieTexture;
 	void LoadMobileMovie (string url) {
 		//modify easy movie setting
@@ -64,6 +65,7 @@ public class StreamWelcomeMovieManager : MonoBehaviour {
 	void StartPlayMobileMovie () {
 		easyMovieTexture.Play();
 	}
+	#endif
 
 
 
