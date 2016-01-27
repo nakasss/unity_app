@@ -26,15 +26,21 @@ public class PlayContentManager : MonoBehaviour {
 	private bool isAlphaAnimating = false;
 	private bool isUpAlpha = false;
 	private float originAlpha = 0.0f;
-	private float destAlpha = 0.0f;
 	private AnimationCurve dissolveAnimationCurve = null;
+	private float playUIshowingDuration = 3.0f;
+	private float screenHoldingTime = 0.0f;
+	private bool isUIControlling = false;
 	//Screen Touch
-	private float cameraDistance;
+	private bool isScreenTouchBlocked = false;
 
 
 
 	// Use this for initialization
 	void Start () {
+		//Disable Whole Play Area
+		playUIGroup.alpha = 0.0f;
+		playUIGroup.interactable = false;
+		playUIGroup.blocksRaycasts = false;
 		//init Playbutton
 		DisablePlayButton();
 		OffPlayButton();
@@ -48,8 +54,6 @@ public class PlayContentManager : MonoBehaviour {
 		totalTimeLabel.text = GetTimeTextByDeltaTime(videoDuration);
 		//Get AudioSource
 		audioSource = tergetScreen.GetComponent<AudioSource>();
-		//Get Screen Distance
-		cameraDistance = rootCanvas.planeDistance;
 
 		//Start Load Video
 		LoadVideo(videoName);
@@ -57,7 +61,7 @@ public class PlayContentManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		OnScreenTouch();
+
 	}
 
 	//Mainly used for Animation
@@ -68,6 +72,10 @@ public class PlayContentManager : MonoBehaviour {
 		//Update progress bar
 		GoProgressBar();
 
+		//Count Screen Holding Time
+		CountScreenHoldingTime();
+		//Called Screen Touched
+		OnScreenTouch();
 		//UI Group Dissolve Animation
 		ChangeUIGroupAlpha();
 	}
@@ -75,9 +83,114 @@ public class PlayContentManager : MonoBehaviour {
 
 
 
+
+
 	/*
 	 *  Video UI Manger
 	 */
+	 //Play UI Group
+	void CountScreenHoldingTime () {
+		if (!playUIGroup.interactable) return;
+
+		if (!isUIControlling) {
+			if (screenHoldingTime > playUIshowingDuration) {
+				TogglePlayUIGroupAlpha();
+				screenHoldingTime = 0.0f;
+				return;
+			}
+
+			if (IsVideoPlaying()) {
+				screenHoldingTime += Time.deltaTime;
+			}
+		}
+	}
+	 //This is modified in Event Trigger from Editor
+	public void OnStartUIControlling () {
+		isUIControlling = true;
+		//reset holding timer
+		screenHoldingTime = 0.0f;
+	}
+	 //This is modified in Event Trigger from Editor
+	public void OnEndUIControlling () {
+		isUIControlling = false;
+	}
+	void TogglePlayUIGroupAlpha () {
+		if (playUIGroup.interactable) {
+			DownUIGroupAlpha();
+			screenHoldingTime = 0.0f;
+		} else {
+			UpUIGroupAlpha();
+		}
+
+		playUIGroup.interactable = !playUIGroup.interactable;
+		playUIGroup.blocksRaycasts = !playUIGroup.blocksRaycasts;
+	}
+	void DownUIGroupAlpha () {
+		if (playUIGroup.alpha <= 0.0f) return;
+
+		SetDissolveAnimationCurve();
+
+		originAlpha = playUIGroup.alpha;
+		isUpAlpha = false;
+		isAlphaAnimating = true;
+	}
+	void UpUIGroupAlpha () {
+		if (playUIGroup.alpha >= 1.0f) return;
+
+		SetDissolveAnimationCurve();
+
+		originAlpha = playUIGroup.alpha;
+		isUpAlpha = true;
+		isAlphaAnimating = true;
+	}
+	void SetDissolveAnimationCurve () {
+		float animationDuration = 0.2f;
+		float key1InTangent = 0.0f;
+		float key1OutTangent = 0.1f;
+		float key2InTangent = 0.0f;
+		float key2OutTangent = 0.0f;
+
+		Keyframe keyFrame1 = new Keyframe(Time.time, 0.0f, key1InTangent, key1OutTangent);
+		Keyframe keyFrame2 = new Keyframe(Time.time + animationDuration, 1.0f, key2InTangent, key2OutTangent);
+		dissolveAnimationCurve = new AnimationCurve(keyFrame1, keyFrame2);
+	}
+	void ChangeUIGroupAlpha () {
+		if (!isAlphaAnimating || dissolveAnimationCurve == null) {
+			return;
+		}
+
+		if (Time.time >= dissolveAnimationCurve.keys[dissolveAnimationCurve.length-1].time) {
+			//Finish Animation
+			isAlphaAnimating = false;
+			//Adjust Alpha
+			playUIGroup.alpha = isUpAlpha ? 1.0f : 0.0f;
+
+			return;
+		}
+
+		float newAlphaValue = 1.0f * dissolveAnimationCurve.Evaluate(Time.time);
+		if (isUpAlpha) {
+			playUIGroup.alpha = originAlpha + (1.0f * dissolveAnimationCurve.Evaluate(Time.time));
+		} else {
+			playUIGroup.alpha = originAlpha - (1.0f * dissolveAnimationCurve.Evaluate(Time.time));
+		}
+	}
+	//Screen Touch Manager
+	//Called In LateUpate
+	void OnScreenTouch() {
+		if ((Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Ended) || Input.GetMouseButtonUp(0)) {
+			if (isScreenTouchBlocked) {
+				isScreenTouchBlocked = false;
+			} else {
+				TogglePlayUIGroupAlpha();
+			}
+		}
+	}
+	//This is called in Event Trigger from Editor
+	public void BlockScreenTouch () {
+		isScreenTouchBlocked = true;
+	}
+
 	// Play Button
 	// Play Button Event Method
 	void OnPlayButtonChanged (bool isOn) {
@@ -101,6 +214,9 @@ public class PlayContentManager : MonoBehaviour {
 	void OffPlayButton () {
 		playButton.isOn = false;	
 	}
+
+	// Finish Buttons
+	
 
 	// Time Label
 	void TimerCountUp () {
@@ -170,88 +286,6 @@ public class PlayContentManager : MonoBehaviour {
 		videoProgressBar.value = value;
 	}
 
-	//Play UI Group
-	void TogglePlayUIGroupAlpha () {
-		if (playUIGroup.interactable) {
-			DownUIGroupAlpha();
-		} else {
-			UpUIGroupAlpha();
-		}
-
-		playUIGroup.interactable = !playUIGroup.interactable;
-	}
-	void DownUIGroupAlpha () {
-		if (playUIGroup.alpha == 0.0f) return;
-
-		SetDissolveAnimationCurve();
-
-		originAlpha = playUIGroup.alpha;
-		isUpAlpha = false;
-		isAlphaAnimating = true;
-	}
-	void UpUIGroupAlpha () {
-		if (playUIGroup.alpha == 1.0f) return;
-
-		SetDissolveAnimationCurve();
-
-		originAlpha = playUIGroup.alpha;
-		isUpAlpha = true;
-		isAlphaAnimating = true;
-	}
-	void SetDissolveAnimationCurve () {
-		float animationDuration = 0.2f;
-		float key1InTangent = 0.0f;
-		float key1OutTangent = 0.1f;
-		float key2InTangent = 0.0f;
-		float key2OutTangent = 0.0f;
-
-		Keyframe keyFrame1 = new Keyframe(Time.time, 0.0f, key1InTangent, key1OutTangent);
-		Keyframe keyFrame2 = new Keyframe(Time.time + animationDuration, 1.0f, key2InTangent, key2OutTangent);
-		dissolveAnimationCurve = new AnimationCurve(keyFrame1, keyFrame2);
-	}
-	void ChangeUIGroupAlpha () {
-		if (!isAlphaAnimating || dissolveAnimationCurve == null) {
-			return;
-		}
-		if (Time.time >= dissolveAnimationCurve.keys[dissolveAnimationCurve.length-1].time) {
-			//Finish Animation
-			isAlphaAnimating = false;
-			return;
-		}
-
-		float newAlphaValue = 1.0f * dissolveAnimationCurve.Evaluate(Time.time);
-		if (isUpAlpha) {
-			playUIGroup.alpha = originAlpha + (1.0f * dissolveAnimationCurve.Evaluate(Time.time));
-		} else {
-			playUIGroup.alpha = originAlpha - (1.0f * dissolveAnimationCurve.Evaluate(Time.time));
-		}
-	}
-
-	//Screen Touch
-	public void OnScreenTouch() {
-
-
-		if ((Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Ended) || Input.GetMouseButtonUp(0)) {
-			//TogglePlayUIGroupAlpha();
-			GetTouchedObjectName(Input.mousePosition);
-		}
-	}
-
-	string GetTouchedObjectName (Vector3 touchedPos) {
-		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-		Debug.DrawRay(ray.origin, ray.direction * 10, Color.yellow);
-		RaycastHit hit = new RaycastHit();
-
-		string objectName = "";
-		if (Physics.Raycast(ray.origin,ray.direction,out hit,Mathf.Infinity)) {
-        	objectName = hit.collider.gameObject.name;
-        	Debug.Log("Object name : " + objectName);
-      	} else {
-      		Debug.Log("Object name : can't get");
-      	}
-
-      	return objectName;
-	}
 
 
 
