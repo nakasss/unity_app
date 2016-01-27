@@ -10,18 +10,15 @@ public class PlayContentManager : MonoBehaviour {
 
 	[SerializeField] private GameObject tergetScreen;
 	[SerializeField] private Toggle playButton;
+	[SerializeField] private CanvasGroup playButtonWrapper;
+	[SerializeField] private CanvasGroup videoEndButtonsWrapper;
 	[SerializeField] private Slider videoProgressBar;
 	[SerializeField] private Text timeLabel;
 	[SerializeField] private Text totalTimeLabel;
 	[SerializeField] private CanvasGroup playUIGroup;
-	[SerializeField] private Canvas rootCanvas;
 
 	private AudioSource audioSource;
 
-	//Timer 
-	private float progressTimer = 0.0f;
-	//Progress Bar
-	private bool isDragging = false; //This valiable is modified in ProgressBarDragManager.cs
 	//PlayUIGroup Alpha Animation
 	private bool isAlphaAnimating = false;
 	private bool isUpAlpha = false;
@@ -30,6 +27,13 @@ public class PlayContentManager : MonoBehaviour {
 	private float playUIshowingDuration = 3.0f;
 	private float screenHoldingTime = 0.0f;
 	private bool isUIControlling = false;
+	//PlayButton
+	private AnimationCurve playButtonAniCurve = null;
+	//EndVideoButtons
+	//Timer
+	private float progressTimer = 0.0f;
+	//Progress Bar
+	private bool isDragging = false; //This valiable is modified in ProgressBarDragManager.cs
 	//Screen Touch
 	private bool isScreenTouchBlocked = false;
 
@@ -202,6 +206,27 @@ public class PlayContentManager : MonoBehaviour {
 			Pause();
 		}
 	}
+	void ChangePlayButtonAlpha () {
+		if (!isAlphaAnimating || dissolveAnimationCurve == null) {
+			return;
+		}
+
+		if (Time.time >= dissolveAnimationCurve.keys[dissolveAnimationCurve.length-1].time) {
+			//Finish Animation
+			isAlphaAnimating = false;
+			//Adjust Alpha
+			playUIGroup.alpha = isUpAlpha ? 1.0f : 0.0f;
+
+			return;
+		}
+
+		float newAlphaValue = 1.0f * dissolveAnimationCurve.Evaluate(Time.time);
+		if (isUpAlpha) {
+			playUIGroup.alpha = originAlpha + (1.0f * dissolveAnimationCurve.Evaluate(Time.time));
+		} else {
+			playUIGroup.alpha = originAlpha - (1.0f * dissolveAnimationCurve.Evaluate(Time.time));
+		}
+	}
 	void EnablePlayButton () {
 		playButton.enabled = true;
 	}
@@ -216,7 +241,8 @@ public class PlayContentManager : MonoBehaviour {
 	}
 
 	// Finish Buttons
-	
+
+
 
 	// Time Label
 	void TimerCountUp () {
