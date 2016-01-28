@@ -5,23 +5,27 @@ using System.Collections;
 
 public class PlayContentManager : MonoBehaviour {
 	private static readonly string baseURL = "https://dl.dropboxusercontent.com/u/62976696/VideoStreamingTest/";
-	private string videoName = "sample_scene";
-	private float videoDuration = 98.0f; //TODO : It have to ge got by API and it has to be ms.
+	private string videoName = "EYvideo";
+	private float videoDuration = 280.0f; //TODO : It have to ge got by API and it has to be ms.
 
 	[SerializeField] private GameObject tergetScreen;
 	[SerializeField] private Toggle playButton;
+	[SerializeField] private CanvasGroup playButtonWrapper;
+	[SerializeField] private CanvasGroup videoEndButtonsWrapper;
 	[SerializeField] private Slider videoProgressBar;
 	[SerializeField] private Text timeLabel;
 	[SerializeField] private Text totalTimeLabel;
 	[SerializeField] private CanvasGroup playUIGroup;
-	[SerializeField] private Canvas rootCanvas;
+	[SerializeField] private Animator playButtonAnimator;
+	[SerializeField] private Animator endVideoButtonsAnimator;
 
-	private AudioSource audioSource;
-
-	//Timer 
+	//Timer
 	private float progressTimer = 0.0f;
 	//Progress Bar
 	private bool isDragging = false; //This valiable is modified in ProgressBarDragManager.cs
+	//Screen Touch
+	private bool isScreenTouchBlocked = false;
+
 	//PlayUIGroup Alpha Animation
 	private bool isAlphaAnimating = false;
 	private bool isUpAlpha = false;
@@ -30,8 +34,9 @@ public class PlayContentManager : MonoBehaviour {
 	private float playUIshowingDuration = 3.0f;
 	private float screenHoldingTime = 0.0f;
 	private bool isUIControlling = false;
-	//Screen Touch
-	private bool isScreenTouchBlocked = false;
+	//PlayButton
+
+	//EndVideoButtons
 
 
 
@@ -52,8 +57,6 @@ public class PlayContentManager : MonoBehaviour {
 		SetTimeText("00:00");
 		//Set Total Time
 		totalTimeLabel.text = GetTimeTextByDeltaTime(videoDuration);
-		//Get AudioSource
-		audioSource = tergetScreen.GetComponent<AudioSource>();
 
 		//Start Load Video
 		LoadVideo(videoName);
@@ -78,6 +81,11 @@ public class PlayContentManager : MonoBehaviour {
 		OnScreenTouch();
 		//UI Group Dissolve Animation
 		ChangeUIGroupAlpha();
+
+		#if UNITY_EDITOR
+		//Detect Desk Movie End
+		DetectDeskMovieEnd();
+		#endif
 	}
 
 
@@ -191,6 +199,41 @@ public class PlayContentManager : MonoBehaviour {
 		isScreenTouchBlocked = true;
 	}
 
+	// Middle Buttons
+	void ToggleMiddleButtonsWithoutAnimation () {
+
+		if (playButtonWrapper.interactable) {
+			//Deactivate Play Button
+			playButtonWrapper.alpha = 0.0f;
+			playButtonWrapper.interactable = false;
+			playButtonWrapper.blocksRaycasts = false;
+
+			//Activate End Video Button
+			videoEndButtonsWrapper.alpha = 1.0f;
+			videoEndButtonsWrapper.interactable = true;
+			videoEndButtonsWrapper.blocksRaycasts = true;
+		} else {
+			//Activate Play Button
+			playButtonWrapper.alpha = 1.0f;
+			playButtonWrapper.interactable = true;
+			playButtonWrapper.blocksRaycasts = true;
+
+			//Deactivate End Video Button
+			videoEndButtonsWrapper.alpha = 0.0f;
+			videoEndButtonsWrapper.interactable = false;
+			videoEndButtonsWrapper.blocksRaycasts = false;
+		}
+	}
+	void ToggleMiddleButtonsWithAnimation () {
+		if (playButtonWrapper.interactable) {
+			playButtonAnimator.SetBool("IsAppear", false);
+			endVideoButtonsAnimator.SetBool("IsShow", true);
+		} else {
+			playButtonAnimator.SetBool("IsAppear", true);
+			endVideoButtonsAnimator.SetBool("IsShow", false);
+		}
+	}
+
 	// Play Button
 	// Play Button Event Method
 	void OnPlayButtonChanged (bool isOn) {
@@ -215,8 +258,15 @@ public class PlayContentManager : MonoBehaviour {
 		playButton.isOn = false;	
 	}
 
-	// Finish Buttons
-	
+	// Replay Button
+	public void OnReplayButtonClicked () {
+		ToggleMiddleButtonsWithAnimation();
+		TogglePlayUIGroupAlpha();
+
+		Restart();
+	}
+
+
 
 	// Time Label
 	void TimerCountUp () {
@@ -263,6 +313,13 @@ public class PlayContentManager : MonoBehaviour {
 	//Called in ProgressBarDragManager.cs
 	public void EndDraggingValueChangeCheck () {
 		isDragging = false;
+
+		//Toggle Middle Button
+		//if (IsVideoEnd()) {}
+		if (!playButtonWrapper.interactable) {
+			ToggleMiddleButtonsWithAnimation();
+		}
+		
 
 		//Restart on Editor
 		JumpTo(progressTimer);
@@ -335,6 +392,14 @@ public class PlayContentManager : MonoBehaviour {
 		#endif
 	}
 
+	void Rewind () {
+		#if UNITY_EDITOR
+		RewindDesktMovie();
+		#elif UNITY_IPHONE || UNITY_ANDROID
+		RewindMobileMovie();
+		#endif		
+	}
+
 	void Restart () {
 		//Init UI
 		progressTimer = 0.0f;
@@ -371,6 +436,29 @@ public class PlayContentManager : MonoBehaviour {
 		#endif
 	}
 
+	bool IsVideoEnd () {
+		#if UNITY_EDITOR
+		return IsDeskMovieEnd();
+		#elif UNITY_IPHONE || UNITY_ANDROID
+		return IsEndMobileMovie();
+		#endif
+	}
+
+	void OnVideoEnd () {
+		//Rewind Video
+		Rewind();
+
+		OffPlayButton();
+
+		if (playButtonWrapper.interactable) {
+			ToggleMiddleButtonsWithAnimation();
+		}
+
+		if (!playUIGroup.interactable) {
+			TogglePlayUIGroupAlpha();
+		}
+	}
+
 
 
 
@@ -403,6 +491,14 @@ public class PlayContentManager : MonoBehaviour {
 
 	void StartPlayMobileMovie () {
 		easyMovieTexture.Play();
+
+		//Call when mobile movie end
+		if (easyMovieTexture.OnEnd == null) {
+			easyMovieTexture.OnEnd = () => {
+				//Call OnVideoEnd
+				OnVideoEnd();
+			};
+		}
 	}
 
 	void PauseMobileMovie () {
@@ -413,9 +509,19 @@ public class PlayContentManager : MonoBehaviour {
 		easyMovieTexture.Play();
 	}
 
-	void ReplayMobileMovieFromBegin () {
+	void RewindMobileMovie () {
 		//Stop Video and Rewind
 		easyMovieTexture.Stop();
+
+		//Reset Call when mobile movie end
+		if (easyMovieTexture.OnEnd != null) {
+			easyMovieTexture.OnEnd = null;
+		}
+	}
+
+	void ReplayMobileMovieFromBegin () {
+		//Stop Video and Rewind
+		RewindMobileMovie();
 
 		//Start
 		StartPlayMobileMovie();
@@ -426,6 +532,14 @@ public class PlayContentManager : MonoBehaviour {
 
 		if (!IsPlayingMobileMovie()) {
 			//Update first frame
+		}
+
+		//Call when mobile movie end
+		if (easyMovieTexture.OnEnd == null) {
+			easyMovieTexture.OnEnd = () => {
+				//Call OnVideoEnd
+				OnVideoEnd();
+			};
 		}
 	}
 
@@ -444,6 +558,14 @@ public class PlayContentManager : MonoBehaviour {
 			return false;
 		}
 	}
+
+	bool IsEndMobileMovie () {
+		if (easyMovieTexture.GetCurrentState() == MediaPlayerCtrl.MEDIAPLAYER_STATE.END) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 	#endif
 
 
@@ -454,6 +576,9 @@ public class PlayContentManager : MonoBehaviour {
 	 */
 	#if UNITY_EDITOR
 	private MovieTexture deskMovie;
+	private AudioSource audioSource;
+	private float timeUntilEnd = 0.0f;
+	private bool isDeskMovieEndDetected = false;
 	//Load Movie
 	IEnumerator LoadDeskMovie (string url) {
 		WWW www = new WWW(url);
@@ -465,6 +590,8 @@ public class PlayContentManager : MonoBehaviour {
 
 	    //Set Movie
 		tergetScreen.GetComponent<Renderer>().material.mainTexture = deskMovie;
+		//Get AudioSource
+		audioSource = tergetScreen.GetComponent<AudioSource>();
 		//Set Audio
 		audioSource.clip = deskMovie.audioClip;
 		//Get Duration
@@ -501,14 +628,51 @@ public class PlayContentManager : MonoBehaviour {
 		}
 	}
 
-	void ReplayDeskMovieFromBegin () {
-		//Stop Video and Rewind
+	void RewindDesktMovie () {
 		deskMovie.Stop();
 		audioSource.Stop();
 		audioSource.clip = deskMovie.audioClip;
+	}
+
+	void ReplayDeskMovieFromBegin () {
+		//Stop Video and Rewind
+		RewindDesktMovie();
+
+		if (!playButtonWrapper.interactable) {
+			ToggleMiddleButtonsWithAnimation();
+		}
 
 		//Start
 		StartPlayDeskMovie();
+	}
+
+	bool IsDeskMovieEnd () {
+
+		if (Mathf.Round(progressTimer) >= videoDuration) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	void DetectDeskMovieEnd () {
+		if (!deskMovie.isPlaying) return;
+
+		if (IsDeskMovieEnd() && !isDeskMovieEndDetected) {
+			timeUntilEnd = 0.0f;
+			isDeskMovieEndDetected = true;
+		}
+
+		//Call VideoEnd After 0.5 sec after rough detect Video end
+		if (isDeskMovieEndDetected) {
+			timeUntilEnd += Time.deltaTime;
+
+			if (timeUntilEnd >= 1f) {
+				isDeskMovieEndDetected = false;
+				timeUntilEnd = 0.0f;
+				OnVideoEnd();				
+			}
+		}
 	}
 	#endif
 
