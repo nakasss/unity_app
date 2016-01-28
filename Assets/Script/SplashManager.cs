@@ -5,9 +5,12 @@ using System.Collections;
 
 public class SplashManager : MonoBehaviour {
 	//Only For Debug
-	private bool isFirstOpen = false;
+	private bool isFirstOpen = true;
 
 	private bool isScreenShow = false;
+
+	[SerializeField] private Animator splashAnimator;
+
 
 
 	void Awake () {
@@ -92,6 +95,7 @@ public class SplashManager : MonoBehaviour {
 	 */
 	[SerializeField] private GameObject welcomeContent;
 	[SerializeField] private GameObject welcomeScreen;
+	[SerializeField] private GameObject welcomeSubCamera;
 
     public void MoveToMain () {
 		if (isMainSceneLoaded) {
@@ -102,5 +106,7 @@ public class SplashManager : MonoBehaviour {
 	public void MoveToWelcome () {
 		welcomeContent.SetActive(true);
 		welcomeScreen.SetActive(true);
+		welcomeSubCamera.SetActive(true);
+		splashAnimator.SetBool("SplashShow", false);
 	}
 }
