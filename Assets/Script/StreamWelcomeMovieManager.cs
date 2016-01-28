@@ -5,6 +5,8 @@ public class StreamWelcomeMovieManager : MonoBehaviour {
 	private static readonly string baseURL = "https://dl.dropboxusercontent.com/u/62976696/VideoStreamingTest/";
 	private string videoName = "sample_scene";
 
+	private bool isReadyToPlay = false;
+
 	[SerializeField] private GameObject tergetScreen;
 
 
@@ -20,7 +22,7 @@ public class StreamWelcomeMovieManager : MonoBehaviour {
 	/*
 	 *  Common Video Manager
 	 */
-	void LoadVideo (string video) {
+	public void LoadVideo (string video) {
 		string url = "";
 		if (Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer) {
 			url = baseURL + video + ".mp4";
@@ -35,6 +37,18 @@ public class StreamWelcomeMovieManager : MonoBehaviour {
 		//Play in Mobile platform
 		LoadMobileMovie(url);
 		#endif
+	}
+	public void PlayVideo () {
+		#if UNITY_EDITOR
+		//Play in Editor
+		StartPlayDeskMovie();
+		#elif UNITY_IPHONE || 	UNITY_ANDROID
+		//Play in Mobile platform
+		StartPlayMobileMovie();
+		#endif
+	}
+	public bool IsReadyToPlay () {
+		return isReadyToPlay;
 	}
 
 
@@ -58,7 +72,7 @@ public class StreamWelcomeMovieManager : MonoBehaviour {
 		//Set Delegate On Video Ready
 		easyMovieTexture.OnReady = () => {
 			easyMovieTexture.SetVolume(0.0f);
-			StartPlayMobileMovie();
+			isReadyToPlay = true;
 		};
 	}
 
@@ -88,8 +102,7 @@ public class StreamWelcomeMovieManager : MonoBehaviour {
 		//deactive loop
 		deskMovie.loop = true;
 
-		//StartPlay
-		StartPlayDeskMovie();
+		isReadyToPlay = true;
 	}
 
 	void StartPlayDeskMovie () {
