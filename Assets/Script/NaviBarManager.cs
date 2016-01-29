@@ -4,6 +4,15 @@ using System.Collections;
 
 
 public class NaviBarManager : MonoBehaviour {
+	[SerializeField] private Animator nonViewerAC;
+	[SerializeField] private Animator naviIconAC;
+
+	enum NaviStatus : int {
+		Default = 0,
+		XMark = 1,
+		Back = 2
+	}
+
 
 	// Use this for initialization
 	void Start () {
@@ -17,27 +26,20 @@ public class NaviBarManager : MonoBehaviour {
 
 
 	// Called in navi icon evetn trigger
-	[SerializeField] private Animator naviIconAC;
 	private int navistatus = 0;
 	public void OnNaviIconClicked () {
-		switch (navistatus) {
-			case 0:
-				naviIconAC.SetInteger("NavigationStatus", 0);
-				break;
-			case 1:
-				naviIconAC.SetInteger("NavigationStatus", 1);
-				break;
-			case 2:
-				naviIconAC.SetInteger("NavigationStatus", 2);
-				break;
-			default:
-				naviIconAC.SetInteger("NavigationStatus", 0);
-				break;
+		int currentStatus = naviIconAC.GetInteger("NavigationStatus");
+		if ((int)NaviStatus.Default == currentStatus) {
+			naviIconAC.SetInteger("NavigationStatus", (int)NaviStatus.XMark);
+			nonViewerAC.SetBool("IsOpenNavigation", true);
+		} else if ((int)NaviStatus.XMark == currentStatus) {
+			naviIconAC.SetInteger("NavigationStatus", (int)NaviStatus.Default);
+			nonViewerAC.SetBool("IsOpenNavigation", false);
+		} else if ((int)NaviStatus.Back == currentStatus) {
+			//Back To Main
+			Debug.Log("Navi Back Click");
+			naviIconAC.SetInteger("NavigationStatus", (int)NaviStatus.Default);
 		}
 
-		navistatus++;
-		if (navistatus > 2) {
-			navistatus = 0;
-		}
 	}
 }
