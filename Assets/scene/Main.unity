@@ -513,7 +513,7 @@ RectTransform:
   m_AnchorMin: {x: .959999979, y: .300000012}
   m_AnchorMax: {x: .959999979, y: .699999988}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 23.8650436, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 1, y: .5}
 --- !u!114 &68333076
 MonoBehaviour:
@@ -1177,6 +1177,8 @@ MonoBehaviour:
   descriptionArea: {fileID: 524675676}
   scrollRect: {fileID: 154383781}
   videoInfo: {fileID: 1271070913}
+  nonViewerAC: {fileID: 819902441}
+  playContentManager: {fileID: 1275974978}
 --- !u!1 &181711054
 GameObject:
   m_ObjectHideFlags: 0
@@ -1660,9 +1662,9 @@ RectTransform:
   m_Father: {fileID: 1499250068}
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -27.8999786, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: .5, y: .5}
 --- !u!114 &342470745
 MonoBehaviour:
@@ -1829,6 +1831,7 @@ GameObject:
   m_Component:
   - 224: {fileID: 394849938}
   - 114: {fileID: 394849939}
+  - 225: {fileID: 394849940}
   m_Layer: 5
   m_Name: NavigationContent
   m_TagString: Untagged
@@ -1869,6 +1872,17 @@ MonoBehaviour:
   nonViewerAC: {fileID: 819902441}
   naviIconAC: {fileID: 857234235}
   mainContentAC: {fileID: 1211005338}
+--- !u!225 &394849940
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 394849937}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &416177534
 GameObject:
   m_ObjectHideFlags: 0
@@ -2051,6 +2065,7 @@ GameObject:
   - 222: {fileID: 454492348}
   - 114: {fileID: 454492347}
   - 114: {fileID: 454492349}
+  - 225: {fileID: 454492350}
   m_Layer: 5
   m_Name: NaviBar
   m_TagString: Untagged
@@ -2119,6 +2134,17 @@ MonoBehaviour:
   nonViewerAC: {fileID: 819902441}
   naviIconAC: {fileID: 857234235}
   mainContentAC: {fileID: 1211005338}
+--- !u!225 &454492350
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 454492345}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &465002237
 GameObject:
   m_ObjectHideFlags: 0
@@ -2450,9 +2476,9 @@ RectTransform:
   m_Father: {fileID: 901209944}
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -27.9000092, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: .5, y: .5}
 --- !u!114 &571823636
 MonoBehaviour:
@@ -5113,6 +5139,7 @@ GameObject:
   - 222: {fileID: 1211005337}
   - 114: {fileID: 1211005336}
   - 95: {fileID: 1211005338}
+  - 225: {fileID: 1211005339}
   m_Layer: 5
   m_Name: MainContent
   m_TagString: Untagged
@@ -5185,6 +5212,17 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!225 &1211005339
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1211005334}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &1244180145
 GameObject:
   m_ObjectHideFlags: 0
@@ -5347,13 +5385,14 @@ GameObject:
   - 224: {fileID: 1275974977}
   - 114: {fileID: 1275974978}
   - 114: {fileID: 1275974979}
+  - 225: {fileID: 1275974980}
   m_Layer: 5
   m_Name: PlayContent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1275974977
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5393,6 +5432,7 @@ MonoBehaviour:
   playUIGroup: {fileID: 1606693054}
   playButtonAnimator: {fileID: 438472411}
   endVideoButtonsAnimator: {fileID: 1901703246}
+  nonViewerAC: {fileID: 819902441}
   easyMovieTexture: {fileID: 1275974979}
 --- !u!114 &1275974979
 MonoBehaviour:
@@ -5414,6 +5454,17 @@ MonoBehaviour:
   m_bLoop: 0
   m_bAutoPlay: 0
   m_bInit: 0
+--- !u!225 &1275974980
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1275974976}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
 --- !u!1 &1288638419
 GameObject:
   m_ObjectHideFlags: 0
@@ -5448,9 +5499,9 @@ RectTransform:
   m_Father: {fileID: 1096320989}
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -27.9000397, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: .5, y: .5}
 --- !u!114 &1288638421
 MonoBehaviour:
@@ -5704,7 +5755,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1308856174}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 154383784}
+        m_MethodName: OnPlayButtonClicked
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &1308856174
@@ -6084,10 +6146,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 852311839}
   m_RootOrder: 0
-  m_AnchorMin: {x: .296999991, y: 0}
-  m_AnchorMax: {x: .296999991, y: 1}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 10.8919973, y: 0}
+  m_SizeDelta: {x: 20.776001, y: 0}
   m_Pivot: {x: .5, y: .5}
 --- !u!114 &1349356703
 MonoBehaviour:
@@ -6531,7 +6593,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1444077262
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6587,7 +6649,7 @@ RectTransform:
   m_AnchorMin: {x: .949999988, y: .360000014}
   m_AnchorMax: {x: .949999988, y: .639999986}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 35.1451263, y: 0}
   m_Pivot: {x: 1, y: .5}
 --- !u!1 &1457302109
 GameObject:
@@ -6944,7 +7006,7 @@ RectTransform:
   m_Father: {fileID: 1677980464}
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: .296999991, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: .5, y: .5}
@@ -8064,7 +8126,7 @@ RectTransform:
   m_AnchorMin: {x: .0399999991, y: .300000012}
   m_AnchorMax: {x: .0399999991, y: .699999988}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 18.6720123, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: .5}
 --- !u!114 &1944245257
 MonoBehaviour:
@@ -8107,6 +8169,17 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1275974978}
         m_MethodName: BlockScreenTouch
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1275974978}
+        m_MethodName: OnBackArrowClicked
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -8652,9 +8725,9 @@ RectTransform:
   m_Father: {fileID: 438472409}
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -73.2000275, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: .5, y: .5}
 --- !u!114 &2036273638
 MonoBehaviour:
