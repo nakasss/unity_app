@@ -8,6 +8,9 @@ public class PlayContentManager : MonoBehaviour {
 	private string videoName = "EYvideo";
 	private float videoDuration = 280.0f; //TODO : It have to ge got by API and it has to be ms.
 
+	private bool isPlayActive = false;
+	private Texture dummyTexture = null;
+
 	[SerializeField] private GameObject tergetScreen;
 	[SerializeField] private Toggle playButton;
 	[SerializeField] private CanvasGroup playButtonWrapper;
@@ -18,6 +21,7 @@ public class PlayContentManager : MonoBehaviour {
 	[SerializeField] private CanvasGroup playUIGroup;
 	[SerializeField] private Animator playButtonAnimator;
 	[SerializeField] private Animator endVideoButtonsAnimator;
+	[SerializeField] private Animator nonViewerAC;
 
 	//Timer
 	private float progressTimer = 0.0f;
@@ -42,24 +46,12 @@ public class PlayContentManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		//Disable Whole Play Area
-		playUIGroup.alpha = 0.0f;
-		playUIGroup.interactable = false;
-		playUIGroup.blocksRaycasts = false;
-		//init Playbutton
-		DisablePlayButton();
-		OffPlayButton();
-		DisableProgressBar();
-		//init Progress Bar
-		SetSliderValue(0.0f);
+		//Add Event Listener
 		videoProgressBar.onValueChanged.AddListener(delegate {DraggingValueChangeCheck();});
-		//init Timer Label
-		SetTimeText("00:00");
-		//Set Total Time
-		totalTimeLabel.text = GetTimeTextByDeltaTime(videoDuration);
 
-		//Start Load Video
-		LoadVideo(videoName);
+		//get Dummy Texture
+		dummyTexture = tergetScreen.GetComponent<Renderer>().material.mainTexture;
+
 	}
 	
 	// Update is called once per frame
@@ -69,6 +61,8 @@ public class PlayContentManager : MonoBehaviour {
 
 	//Mainly used for Animation
 	void LateUpdate() {
+		if (!isPlayActive) return;
+
 		//Time count up
 		TimerCountUp();
 
@@ -90,6 +84,54 @@ public class PlayContentManager : MonoBehaviour {
 
 
 
+
+
+	public void InitPlayPage () {
+		progressTimer = 0.0f;
+		//Progress Bar
+		isDragging = false; //This valiable is modified in ProgressBarDragManager.cs
+		//Screen Touch
+		isScreenTouchBlocked = false;
+
+		//PlayUIGroup Alpha Animation
+		isAlphaAnimating = false;
+		isUpAlpha = false;
+		originAlpha = 0.0f;
+		dissolveAnimationCurve = null;
+		playUIshowingDuration = 3.0f;
+		screenHoldingTime = 0.0f;
+		isUIControlling = false;
+
+
+		//Disable Whole Play Area
+		playUIGroup.alpha = 0.0f;
+		playUIGroup.interactable = false;
+		playUIGroup.blocksRaycasts = false;
+		//init Playbutton
+		DisablePlayButton();
+		OffPlayButton();
+		DisableProgressBar();
+		//init Progress Bar
+		SetSliderValue(0.0f);
+		//init Timer Label
+		SetTimeText("00:00");
+		//Set Total Time
+		totalTimeLabel.text = GetTimeTextByDeltaTime(videoDuration);
+
+		//Start Load Video
+		LoadVideo(videoName);
+
+
+		isPlayActive = true;
+	}
+
+	public void DiscardPlayPage () {
+		OffPlayButton();
+		tergetScreen.GetComponent<Renderer>().material.mainTexture = dummyTexture;
+
+		isPlayActive = false;
+		UnLoadVideo();
+	}
 
 
 
@@ -344,6 +386,12 @@ public class PlayContentManager : MonoBehaviour {
 	}
 
 
+	public void OnBackArrowClicked () {
+		DiscardPlayPage();
+		nonViewerAC.SetBool("IsOpenPlay", false);
+	}
+
+
 
 
 
@@ -418,6 +466,14 @@ public class PlayContentManager : MonoBehaviour {
 		//Start UI
 		EnablePlayButton();
 		OnPlayButton();
+	}
+
+	void UnLoadVideo () {
+		#if UNITY_EDITOR
+		UnLoadDeskVideo();
+		#elif UNITY_IPHONE || UNITY_ANDROID
+		UnloadMobileMovie();
+		#endif
 	}
 
 	bool IsVideoReady () {
@@ -543,6 +599,11 @@ public class PlayContentManager : MonoBehaviour {
 		}
 	}
 
+	void UnloadMobileMovie () {
+		easyMovieTexture.Stop();
+		easyMovieTexture.UnLoad();		
+	}
+
 	bool IsPlayingMobileMovie () {
 		if (easyMovieTexture.GetCurrentState() == MediaPlayerCtrl.MEDIAPLAYER_STATE.PLAYING) {
 			return true;
@@ -583,6 +644,9 @@ public class PlayContentManager : MonoBehaviour {
 	IEnumerator LoadDeskMovie (string url) {
 		WWW www = new WWW(url);
 		deskMovie = www.movie;
+
+		timeUntilEnd = 0.0f;
+		isDeskMovieEndDetected = false;
 
 		while (!deskMovie.isReadyToPlay) {
 	    	yield return null;
@@ -673,6 +737,11 @@ public class PlayContentManager : MonoBehaviour {
 				OnVideoEnd();				
 			}
 		}
+	}
+
+	void UnLoadDeskVideo () {
+		deskMovie.Stop();
+		deskMovie = null;
 	}
 	#endif
 
