@@ -6,11 +6,18 @@ using System.Collections;
 public class NaviBarManager : MonoBehaviour {
 	[SerializeField] private Animator nonViewerAC;
 	[SerializeField] private Animator naviIconAC;
+	[SerializeField] private Animator mainContentAC;
 
 	enum NaviStatus : int {
 		Default = 0,
 		XMark = 1,
 		Back = 2
+	}
+	enum MainContentPageID : int {
+		Main = 0,
+		AboutUs = 1,
+		Contact = 2,
+		BeforePlay = 3
 	}
 
 
@@ -37,8 +44,8 @@ public class NaviBarManager : MonoBehaviour {
 			nonViewerAC.SetBool("IsOpenNavigation", false);
 		} else if ((int)NaviStatus.Back == currentStatus) {
 			//Back To Main
-			Debug.Log("Navi Back Click");
 			naviIconAC.SetInteger("NavigationStatus", (int)NaviStatus.Default);
+			mainContentAC.SetInteger("PageID", (int)MainContentPageID.Main);
 		}
 
 	}

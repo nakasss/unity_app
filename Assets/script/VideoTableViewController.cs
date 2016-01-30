@@ -14,7 +14,7 @@ public class VideoTableViewController : TableViewController<VideoData> {
 			},
 			new VideoData {
 				title = "In the trail of the Refugees",
-				featureImgURL = "refugess_test.jpg"
+				featureImgURL = "refugess.jpg"
 			},
 			new VideoData {
 				title = "Eye Filmmuseum",
