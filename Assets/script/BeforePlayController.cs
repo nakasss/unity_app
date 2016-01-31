@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 
@@ -83,6 +83,25 @@ public class BeforePlayController : MonoBehaviour {
 		nonViewerAC.SetBool("IsOpenPlay", true);
 		//Start Load
 		playContentManager.InitPlayPage();
+	}
+
+
+	//Facebook Button
+	public void OnFBButtonClicked () {
+		string shareURL = "http://www.scopic.nl/"; //Test
+
+		OpenApplicationManager.ShareToFB(shareURL);
+	}
+
+	//Email Button
+	public void OnEmailButtonClicked () {
+		string address = "";
+		//test
+		string subject = "Scopic VR Player";
+		//test
+		string body = "Scopic made this amazing 360 recruitment video for EY. Check out the link below, and don't forget to look around by moving your smartphone/tablet, or to click-and-drag from on your computer. Enjoy! http://www.scopic.nl/page-ey/";
+
+		OpenApplicationManager.OpenEmailApp(address, subject, body);
 	}
 
 }
