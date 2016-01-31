@@ -5,8 +5,8 @@ using System.Collections;
 
 public class PlayContentManager : MonoBehaviour {
 	private static readonly string baseURL = "https://dl.dropboxusercontent.com/u/62976696/VideoStreamingTest/";
-	private string videoName = "EYvideo";
-	private float videoDuration = 280.0f; //TODO : It have to ge got by API and it has to be ms.
+	private string videoName = "sample_scene";
+	private float videoDuration = 98.0f; //TODO : It have to ge got by API and it has to be ms.
 
 	private bool isPlayActive = false;
 	private Texture dummyTexture = null;
@@ -306,6 +306,24 @@ public class PlayContentManager : MonoBehaviour {
 		TogglePlayUIGroupAlpha();
 
 		Restart();
+	}
+
+	//Facebook Button
+	public void OnFBButtonClicked () {
+		string shareURL = "http://www.scopic.nl/"; //Test
+
+		OpenApplicationManager.ShareToFB(shareURL);
+	}
+
+	//Email Button
+	public void OnEmailButtonClicked () {
+		string address = "";
+		//test
+		string subject = "Scopic VR Player";
+		//test
+		string body = "Scopic made this amazing 360 recruitment video for EY. Check out the link below, and don't forget to look around by moving your smartphone/tablet, or to click-and-drag from on your computer. Enjoy! http://www.scopic.nl/page-ey/";
+
+		OpenApplicationManager.OpenEmailApp(address, subject, body);
 	}
 
 
