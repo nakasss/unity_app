@@ -5,7 +5,7 @@ using System.Collections;
 
 public class SplashManager : MonoBehaviour {
 	//Only For Debug
-	private bool isFirstOpen = false;
+	private bool isFirstOpen = true;
 
 	private bool isScreenShow = false;
 

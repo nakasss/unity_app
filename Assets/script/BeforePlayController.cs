@@ -77,10 +77,12 @@ public class BeforePlayController : MonoBehaviour {
 
 
 	[SerializeField] private Animator nonViewerAC;
+	[SerializeField] private Animator playContentAC;
 	[SerializeField] private PlayContentManager playContentManager;
 	public void OnPlayButtonClicked () {
 		//Enable Play
 		nonViewerAC.SetBool("IsOpenPlay", true);
+		playContentAC.SetBool("IsOpenPlay", true);
 		//Start Load
 		playContentManager.InitPlayPage();
 	}

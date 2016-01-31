@@ -22,6 +22,9 @@ public class PlayContentManager : MonoBehaviour {
 	[SerializeField] private Animator playButtonAnimator;
 	[SerializeField] private Animator endVideoButtonsAnimator;
 	[SerializeField] private Animator nonViewerAC;
+	[SerializeField] private Animator playContentAC;
+	[SerializeField] private Toggle viewerButton;
+	[SerializeField] private Cardboard cbMain;
 
 	//Timer
 	private float progressTimer = 0.0f;
@@ -404,9 +407,17 @@ public class PlayContentManager : MonoBehaviour {
 	}
 
 
+	//Back Arrow Icon
 	public void OnBackArrowClicked () {
 		DiscardPlayPage();
 		nonViewerAC.SetBool("IsOpenPlay", false);
+		playContentAC.SetBool("IsOpenPlay", false);
+	}
+
+	//Viewer Icon Toggle
+	public void OnViewerIconClicked (bool isOn) {
+		//Toggel VR mode
+		cbMain.VRModeEnabled = viewerButton.isOn;
 	}
 
 
