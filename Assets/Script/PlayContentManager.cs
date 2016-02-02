@@ -24,7 +24,7 @@ public class PlayContentManager : MonoBehaviour {
 	[SerializeField] private Animator nonViewerAC;
 	[SerializeField] private Animator playContentAC;
 	[SerializeField] private Toggle viewerButton;
-	[SerializeField] private Cardboard cbMain;
+	[SerializeField] private GameObject mainCamera;
 
 	//Timer
 	private float progressTimer = 0.0f;
@@ -134,6 +134,8 @@ public class PlayContentManager : MonoBehaviour {
 
 		isPlayActive = false;
 		UnLoadVideo();
+
+		Application.UnloadLevel("PlayCam");
 	}
 
 
@@ -411,6 +413,7 @@ public class PlayContentManager : MonoBehaviour {
 	public void OnBackArrowClicked () {
 		//Set screen orientation
 		Screen.orientation = ScreenOrientation.Portrait;
+		mainCamera.SetActive(true);
 		
 		DiscardPlayPage();
 		nonViewerAC.SetBool("IsOpenPlay", false);
@@ -420,7 +423,7 @@ public class PlayContentManager : MonoBehaviour {
 	//Viewer Icon Toggle
 	public void OnViewerIconClicked (bool isOn) {
 		//Toggel VR mode
-		cbMain.VRModeEnabled = viewerButton.isOn;
+		PlayCamManager.SetVRMode(!PlayCamManager.GetVRMode());
 	}
 
 
