@@ -13,7 +13,7 @@ public class MainContentCheck : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		//Debug.Log("Canvas Alpha : " + mainCamvas.alpha);
-		Debug.Log("PosZ : " + mainRectTransform.rect);
+		//Debug.Log("PosZ : " + mainRectTransform.rect);
 		//Debug.Log("Transfrom : " + transform);
 	}
 }

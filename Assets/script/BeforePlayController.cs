@@ -10,6 +10,8 @@ public class BeforePlayController : MonoBehaviour {
 	[SerializeField] private RectTransform descriptionArea; //TODO : It can be cached.
 	[SerializeField] private ScrollRect scrollRect;
 	[SerializeField] private CanvasGroup videoInfo;
+	[SerializeField] private GameObject mainCamera;
+
 	private float startDisappearPoint = 0.2f;
 	private float endDisappearPoint = 0.8f;
 
@@ -91,7 +93,20 @@ public class BeforePlayController : MonoBehaviour {
 
 		//Set screen orientation
 		Screen.orientation = ScreenOrientation.LandscapeLeft;
+
+		StartCoroutine(LoadPlayCam());
 	}
+
+	private IEnumerator LoadPlayCam () {
+		AsyncOperation async = Application.LoadLevelAdditiveAsync("PlayCam");
+
+		while(!async.isDone){
+			yield return new WaitForSeconds(0);
+		}
+
+		mainCamera.SetActive(false);
+	}
+        
 
 
 	//Facebook Button

@@ -6,4 +6,8 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scene/MainTest.unity
+    path: Assets/Scene/Splash.unity
+  - enabled: 1
+    path: Assets/Scene/Main.unity
+  - enabled: 1
+    path: Assets/Scene/PlayCam.unity
