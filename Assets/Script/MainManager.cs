@@ -20,6 +20,8 @@ public class MainManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		//Set screen orientation
+		Screen.orientation = ScreenOrientation.Portrait;
 	
 	}
 	

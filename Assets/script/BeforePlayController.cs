@@ -14,7 +14,7 @@ public class BeforePlayController : MonoBehaviour {
 	private float endDisappearPoint = 0.8f;
 
 	private float minTopAreaHeight;
-	private float preferedDescriptionAreaHeight;
+	private float preferedDescriptionAreaHeight = 0.0f;
 
 	private float minTopAreaHeightRatio = 2.4f;
 
@@ -24,7 +24,7 @@ public class BeforePlayController : MonoBehaviour {
 		SetBottomAreaContentsHeight();
 
 		//Set Scroll Event Listener
-		scrollRect.onValueChanged.AddListener(OnScrollPosChanged);
+		//scrollRect.onValueChanged.AddListener(OnScrollPosChanged);
 	}
 	
 	// Update is called once per frame
@@ -56,6 +56,8 @@ public class BeforePlayController : MonoBehaviour {
 
 
 	public void OnScrollPosChanged (Vector2 scrollPos) {
+		if (float.IsNaN(scrollPos.y)) return;
+
 		float scrollPer = 1.0f - scrollPos.y;
 		float bottomPos = preferedDescriptionAreaHeight * scrollPer;
 
@@ -63,6 +65,7 @@ public class BeforePlayController : MonoBehaviour {
 		Vector2 topAreaSD = topArea.sizeDelta; //TODO : It can be cached.
 		topAreaSD.y = -bottomPos;
 		topArea.sizeDelta = topAreaSD;
+
 
 		//Change Video Info Alpha
 		if (scrollPer <= startDisappearPoint) {
@@ -85,6 +88,9 @@ public class BeforePlayController : MonoBehaviour {
 		playContentAC.SetBool("IsOpenPlay", true);
 		//Start Load
 		playContentManager.InitPlayPage();
+
+		//Set screen orientation
+		Screen.orientation = ScreenOrientation.LandscapeLeft;
 	}
 
 

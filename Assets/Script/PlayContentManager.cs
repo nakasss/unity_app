@@ -409,6 +409,9 @@ public class PlayContentManager : MonoBehaviour {
 
 	//Back Arrow Icon
 	public void OnBackArrowClicked () {
+		//Set screen orientation
+		Screen.orientation = ScreenOrientation.Portrait;
+		
 		DiscardPlayPage();
 		nonViewerAC.SetBool("IsOpenPlay", false);
 		playContentAC.SetBool("IsOpenPlay", false);
