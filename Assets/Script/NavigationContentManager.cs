@@ -53,6 +53,13 @@ public class NavigationContentManager : MonoBehaviour {
 		mainContentAC.SetInteger("PageID", (int)MainContentPageID.Contact);
 	}
 
+	public void OnClickOtherScreen () {
+		ChangeNaviIconDefault();
+		ChangeMainContentDefault();
+
+		Debug.Log("Click");
+	}
+
 
 	//Back Navi Icon Defalut
 	private void ChangeNaviIconDefault () {
