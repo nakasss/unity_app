@@ -7,7 +7,7 @@ public class SplashController : MonoBehaviour {
 	[SerializeField] private SplashView view;
 	[SerializeField] private SplashModel model;
 
-	private static readonly bool DEBUG_MODE = false;
+	private static readonly bool DEBUG_MODE = true;
 
 
 	// Use this for initialization
@@ -24,8 +24,10 @@ public class SplashController : MonoBehaviour {
 	/*
 	 * Init
 	 */
+	[SerializeField] VRScreenView vrScreenView;
+
 	public void Init () {
-		
+		vrScreenView.SetDefaultTexture ();	
 	}
 
 
@@ -46,7 +48,28 @@ public class SplashController : MonoBehaviour {
 		if (FirstOpenManager.IsFirstOpen (DEBUG_MODE)) {
 			splashCnavasView.GoTutorial ();
 		} else {
-			view.MoveLogoToTop ();
+
+			if (model.Api.IsLoaded ()) {
+				view.MoveLogoToTop ();
+			} else {
+				model.Api.OnLoaded += view.MoveLogoToTop;
+			}
+
+			/*
+			if (DEBUG_MODE) {
+				if (model.Api.IsLoaded ()) {
+					view.MoveLogoToTop ();
+				} else {
+					model.Api.OnLoaded += view.MoveLogoToTop;
+				}
+			} else {
+				if (model.Api.IsReady ()) {
+					view.MoveLogoToTop ();
+				} else {
+					model.Api.OnReady += view.MoveLogoToTop;
+				}
+			}
+			*/
 		}
 	}
 
@@ -73,7 +96,7 @@ public class SplashController : MonoBehaviour {
 		}
 
 		uiView.GoMain ();
-		splashCnavasView.DestorySplashCanvas ();
+		//splashCnavasView.DestorySplashCanvas ();
 	}
 
 	#endregion Logo

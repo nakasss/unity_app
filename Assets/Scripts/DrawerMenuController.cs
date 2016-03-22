@@ -45,6 +45,6 @@ public class DrawerMenuController : MonoBehaviour {
 	 * On Click Margin Space in menu
 	 */
 	public void OnClickMenuArea () {
-		//mainCanvasView.ShowPages ();
+		mainCanvasView.ShowPages ();
 	}
 }

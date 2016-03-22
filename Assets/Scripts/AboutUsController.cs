@@ -25,13 +25,14 @@ public class AboutUsController : MonoBehaviour {
 	 * On Click Facebook Jump Button
 	 */
 	public void OnClickFacebookButton () {
-		OpenApplicationManager.OpenFBPage("scopicvideo");
+		OpenApplicationManager.OpenFBPage("scopicvr");
 	}
 
 	/*
 	 * On Click Instagram Jump Button
 	 */
 	public void OnClickInstagramButton () {
-		OpenApplicationManager.OpenInsta("scopic_vr");
+		OpenApplicationManager.OpenInstaUserPage ("scopic_vr");
+		//OpenApplicationManager.OpenInsta("scopic_vr");
 	}
 }

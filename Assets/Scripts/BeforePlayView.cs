@@ -206,6 +206,19 @@ public class BeforePlayView : MonoBehaviour {
 
 	#endregion Download Button
 
+
+	/*
+	 * File Size Text
+	 */
+	// TODO : 引数をfloatで扱えるように変更
+	#region File Size Text
+	[SerializeField] private Text fileSizeLabel;
+
+	public void SetFileSize (string fileSize) {
+		fileSizeLabel.text = fileSize;
+	}
+
+	#endregion File Size Text
     
     /*
      * Thumbnail
@@ -228,6 +241,21 @@ public class BeforePlayView : MonoBehaviour {
         bottomTitle.text = title;
     }
     #endregion Bottom Title
+
+	/*
+     * Video Duraction Label
+     */
+	#region Video Duraction Label
+	[SerializeField] private Text videoDurationLabel;
+
+	public void SetDuration (long sec) {
+		string minutePart = (sec / 60 < 10) ? "0" + (sec / 60).ToString() : (sec / 60).ToString();
+		string secPart = (sec % 60 < 10) ? "0" + (sec % 60).ToString() : (sec % 60).ToString();;
+
+		videoDurationLabel.text = minutePart + ":" + secPart;
+	}
+
+	#endregion Video Duraction Label
     
     /*
      * Description
@@ -239,6 +267,7 @@ public class BeforePlayView : MonoBehaviour {
         description.text = descriptionText;
     }
     #endregion Description
+
     
     /*
      * FB
@@ -246,9 +275,34 @@ public class BeforePlayView : MonoBehaviour {
     #region FB
     #endregion FB
     
+
     /*
      * Email
      */
     #region Email
     #endregion Email
+
+
+	/*
+     * Delete Button
+     */
+	#region Delete Button
+
+	[SerializeField] private Animator bottomBtnsWrapperAnimator;
+	private static readonly string DELETE_BUTTON_STATE_KEY_NAME = "IsShowDeleteButton";
+
+	public void ShowDeleteButton () {
+		bottomBtnsWrapperAnimator.SetBool (DELETE_BUTTON_STATE_KEY_NAME, true);
+	}
+
+	public void HideDeleteButton () {
+		bottomBtnsWrapperAnimator.SetBool (DELETE_BUTTON_STATE_KEY_NAME, false);
+	}
+
+	public bool IsShowDeleteButton () {
+		return bottomBtnsWrapperAnimator.GetBool (DELETE_BUTTON_STATE_KEY_NAME);
+	}
+
+	#endregion Delete Button
+
 }

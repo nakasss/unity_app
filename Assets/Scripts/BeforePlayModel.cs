@@ -28,10 +28,12 @@ public class BeforePlayModel : MonoBehaviour {
 	 * Downloader
 	 */
 	#region Downloader
+
 	[SerializeField] private DownloadManager downloader;
 
 	public EasyBgDownloaderCtl Downloader {
 		get { return downloader; }	
 	}
+
 	#endregion Downloader
 }

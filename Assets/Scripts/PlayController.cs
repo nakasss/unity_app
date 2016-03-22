@@ -146,12 +146,14 @@ public class PlayController : MonoBehaviour {
 
 	// Back Icon
 	[SerializeField] private UIRootView uiView;
+	[SerializeField] private VRScreenView vrScreenView;
 
 	public void OnClickBackIcon () {
 		DestoryPlay ();
 
 		model.CamManager.UseSingleCam ();
 		uiView.GoMain ();
+		vrScreenView.SetDefaultTexture ();
 	}
 
 
@@ -203,12 +205,21 @@ public class PlayController : MonoBehaviour {
 
 	// Facebook Button
 	public void OnClickFacebookButton () {
-		Debug.Log ("Click facebook");
+		string shareURL = "http://www.scopic.nl/"; //Test
+		//string shareURL = model.Api.GetFbContet (ID);
+
+		OpenApplicationManager.ShareToFB(shareURL);
 	}
 
 	// Email Button
 	public void OnClickEmailButton () {
-		Debug.Log ("Click Email");
+		string address = "";
+		//test
+		string subject = "Scopic VR";
+		//test
+		string body = model.Api.GetEmailContet (ID);
+
+		OpenApplicationManager.OpenEmailApp (address, subject, body);
 	}
 		
 	#endregion End : Middle Area

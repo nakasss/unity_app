@@ -50,7 +50,7 @@ public class CamerasManager : MonoBehaviour {
 		}
 
 		if (IsTutorialCamEnabled ()) {
-			DisableTutorialSubCam ();
+			DisableTutorialCam ();
 		}
 	}
 
@@ -62,7 +62,7 @@ public class CamerasManager : MonoBehaviour {
 		}
 
 		if (IsTutorialCamEnabled ()) {
-			DisableTutorialSubCam ();
+			DisableTutorialCam ();
 		}
 	}
 
@@ -71,6 +71,10 @@ public class CamerasManager : MonoBehaviour {
 
 		if (IsSingleCamEnabled ()) {
 			DisableSingleCam ();
+		}
+
+		if (IsVRCamEnabled ()) {
+			DisableVRCam ();
 		}
 	}
 
@@ -123,8 +127,21 @@ public class CamerasManager : MonoBehaviour {
 	/*
 	 * Tutorial Camera
 	 */
-	[SerializeField] private Camera tutorialSubCam;
+	[SerializeField] private GameObject tutorialVrCam;
 
+	public void EnableTutorialCam () {
+		tutorialVrCam.SetActive (true);
+	}
+
+	public void DisableTutorialCam () {
+		tutorialVrCam.SetActive (false);
+	}
+
+	public bool IsTutorialCamEnabled () {
+		return tutorialVrCam.active;
+	}
+
+	/*
 	public void EnableTutorialCam () {
 		VRCam.VRModeEnabled = false;
 
@@ -148,4 +165,5 @@ public class CamerasManager : MonoBehaviour {
 	public bool IsTutorialCamEnabled () {
 		return tutorialSubCam.gameObject.active;
 	}
+	*/
 }

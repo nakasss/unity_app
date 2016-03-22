@@ -23,8 +23,12 @@ public class TopPageController : MonoBehaviour {
 	 * Init Top
 	 */
 	public void InitTop () {
-		apiInterface.OnLoaded = view.UpdateVideoList;
-		apiInterface.StartLoadAPI();
+
+		if (apiInterface.IsLoaded ()) {
+			view.UpdateVideoList ();
+		} else {
+			apiInterface.OnLoaded += view.UpdateVideoList;
+		}
 	}
     
     
@@ -32,6 +36,7 @@ public class TopPageController : MonoBehaviour {
      * VideoList Cell Click Event
      */
     #region VideoList Cell Click Event
+
     [SerializeField] private PagesView pagesView;
     
     public void OnClickVideoCell (VideoCellBase videoCell) {
@@ -39,6 +44,7 @@ public class TopPageController : MonoBehaviour {
 
         pagesView.GoToBeforePlay(id);
     }
+
     #endregion VideoList Cell Click Event
 
 }

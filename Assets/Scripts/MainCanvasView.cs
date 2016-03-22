@@ -33,11 +33,20 @@ public class MainCanvasView : MonoBehaviour {
 		mainCanvasAnimator.SetBool (MAIN_CANVAS_PAGE_STATE_KEY_NAME, true);
 	}
 
+	public bool IsOpenPages () {
+		return mainCanvasAnimator.GetBool (MAIN_CANVAS_PAGE_STATE_KEY_NAME);
+	}
+
+
 	/*
 	 * Open Drawer Menu
 	 */
 	public void OpenDrawer () {
 		naviBarView.SetNaviXMark ();
 		mainCanvasAnimator.SetBool (MAIN_CANVAS_PAGE_STATE_KEY_NAME, false);
+	}
+
+	public bool IsOpenDrawer () {
+		return !mainCanvasAnimator.GetBool (MAIN_CANVAS_PAGE_STATE_KEY_NAME);
 	}
 }

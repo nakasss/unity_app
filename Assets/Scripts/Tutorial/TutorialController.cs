@@ -7,10 +7,6 @@ public class TutorialController : MonoBehaviour {
 
 	[SerializeField] private TutorialView view;
 	[SerializeField] private TutotialModel model;
-	[SerializeField]
-	private SplashController splashController;
-	[SerializeField]
-	private MovieManager movieManager;
 
 
 	// Use this for initialization
@@ -37,6 +33,9 @@ public class TutorialController : MonoBehaviour {
 	 */
 	#region Tutorial Root
 
+	[SerializeField] VRScreenView vrScreenView;
+	[SerializeField] Texture tutorialTexture;
+
 	public delegate void ScreenShow();
 	public ScreenShow OnShow;
 
@@ -46,6 +45,8 @@ public class TutorialController : MonoBehaviour {
 			OnShow ();
 		}
 
+		// Call them when bg image is ready
+		vrScreenView.SetTexture(tutorialTexture);
 		view.MoveLogoToTop ();
 		view.ShowTutorial ();
 		view.HideBg ();
@@ -78,48 +79,14 @@ public class TutorialController : MonoBehaviour {
 	 */
 	#region Tutorial
 
+	[SerializeField] private UIRootView uiView;
+
 	public void OnClickGetStartedButton () {
-		Debug.Log ("Click Get Started Button");
+		vrScreenView.SetDefaultTexture ();
+		uiView.GoMain ();
+		model.Cam.UseSingleCam ();
 	}
 
 	#endregion Tutorial
 
-
-	/*
-	public void InitController () {
-
-	}
-
-	public void ActiveTutorial () {
-		
-		movieManager.OnVideoReady = () => {
-			OnCompleteLoadTutorialMovie();
-		};
-		
-		tutorialView.OnComplete = () => {
-			OnCompleteLogoAnimation();
-		};
-		//Start Loading Tutorial Movie
-		movieManager.LoadMovie(turotialMovieURL);
-		//Show Page
-		tutorialView.ShowPage();
-	}
-
-	//Move Logo after video load
-	private void OnCompleteLoadTutorialMovie () {
-		//splashController.DisableSplash();
-		tutorialView.LogoMoveTop();
-	}
-
-	//Show tutorial after logo moved
-	private void OnCompleteLogoAnimation () {
-		tutorialView.HideBg();
-		tutorialView.ShowTutorial();
-	}
-
-
-	public void ClickGetStartedBtn () {
-		//splashController.GoMain();
-	}
-	*/
 }

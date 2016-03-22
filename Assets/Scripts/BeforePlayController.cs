@@ -21,11 +21,7 @@ public class BeforePlayController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		/*
-		 * Test
-		 */
-		//Debug.Log("Downloader Dir : " + model.Downloader.DestinationDirectoryPath);
-		// End : Test
+		
 	}
 	
 	// Update is called once per frame
@@ -49,11 +45,15 @@ public class BeforePlayController : MonoBehaviour {
         
         view.UpdateContentsById(ID);
         view.SetAreaDefaultPosition();
+		view.SetFileSize (model.Api.GetVideoSize (ID));
+		view.SetDuration ((long)model.Api.GetVideoDuration (ID));
 
 		if (StreamAssetManager.FileExists (VideoURL) && !model.Downloader.IsRunning (VideoURL)) {
-			view.ShowPlayButton ();	
+			view.ShowPlayButton ();
+			view.ShowDeleteButton ();
 		} else {
 			view.ShowDownloadButton ();
+			view.HideDeleteButton ();
 
 			if (model.Downloader.IsRunning (VideoURL)) {
 				view.SetDownloadingProgress (0.0f);
@@ -122,16 +122,6 @@ public class BeforePlayController : MonoBehaviour {
 		float videoDuration = (float)model.Api.GetVideoDuration (ID);
 
 		uiView.GoPlay (ID, downloadedVideoPath);
-
-		/*
-		uiView.GoPlay ();
-		playContentManager.InitPlayPage(requestUrl, videoDuration);
-		playView.SetVideoTitle (apiInterface.GetTitle(ID));
-		//playContentManager.InitPlayPage(null, 0);
-
-		//StartCoroutine(LoadPlayCam());
-		Screen.orientation = ScreenOrientation.LandscapeLeft;
-		*/
     }
 
     #endregion Play button click
@@ -170,6 +160,7 @@ public class BeforePlayController : MonoBehaviour {
     #region Facebook button click
     public void OnClickFacebookButton () {
         string shareURL = "http://www.scopic.nl/"; //Test
+		//string shareURL = model.Api.GetFbContet (ID);
 
 		OpenApplicationManager.ShareToFB(shareURL);
     }
@@ -183,9 +174,9 @@ public class BeforePlayController : MonoBehaviour {
     public void OnClickEmailButton () {
         string address = "";
 		//test
-		string subject = "Scopic VR Player";
+		string subject = "Scopic VR";
 		//test
-		string body = "Scopic made this amazing 360 recruitment video for EY. Check out the link below, and don't forget to look around by moving your smartphone/tablet, or to click-and-drag from on your computer. Enjoy! http://www.scopic.nl/page-ey/";
+		string body = model.Api.GetEmailContet (ID);
 
 		OpenApplicationManager.OpenEmailApp(address, subject, body);
     }

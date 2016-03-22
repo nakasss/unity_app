@@ -7,6 +7,8 @@ using MiniJSON;
 
 
 public class ScopicMobileAPIInterface : MonoBehaviour {
+
+	[SerializeField] private bool autoLoadStartEnable = true;
     
     private static readonly string API_BASE_URL = "http://104.155.2.128/api/v1/video/";
     
@@ -31,7 +33,9 @@ public class ScopicMobileAPIInterface : MonoBehaviour {
         currentIdPosition = 0;
         currentTextureDownloadPos = 0;
         
-        //StartCoroutine(getVideoInfo());
+		if (autoLoadStartEnable) {
+			StartLoadAPI ();	
+		}
 	}
 	
 	// Update is called once per frame
@@ -89,6 +93,12 @@ public class ScopicMobileAPIInterface : MonoBehaviour {
 		return videoInfo.ContainsKey (id) ? float.Parse((string)videoInfo[id]["video_duration"]) : -1.0f;
         //return float.Parse((string)videoInfo[id]["video_duration"]);
     }
+
+	// TODO : return float or long
+	public string GetVideoSize (long id = -1) {
+		id = id == -1 ? idList[currentIdPosition] : id;
+		return videoInfo.ContainsKey (id) ? (string)videoInfo[id]["video_size"] : "";
+	}
     
     public void SetThumbnail (RawImage image, long id = -1) {
         id = id == -1 ? idList[currentIdPosition] : id;
@@ -134,14 +144,22 @@ public class ScopicMobileAPIInterface : MonoBehaviour {
     }
     
     public IEnumerator setTextureToRawImage (string url, RawImage image, long id) {
-        WWW www = new WWW(url);
-        
-        yield return www;
-        
-        image.texture = www.textureNonReadable;
-        if (!videoInfo[id].ContainsKey("thumbnail_texture")) {
-            videoInfo[id].Add("thumbnail_texture", www.textureNonReadable);
-        }
+		Texture thumbnailTexture = null;
+
+		if (videoInfo [id].ContainsKey ("thumbnail_texture")) {
+			thumbnailTexture = videoInfo [id] ["thumbnail_texture"] as Texture;
+		} else {
+			WWW www = new WWW(url);
+
+			yield return www;
+
+			thumbnailTexture = www.textureNonReadable;
+			if (!videoInfo[id].ContainsKey("thumbnail_texture")) {
+				videoInfo[id].Add("thumbnail_texture", thumbnailTexture);
+			}
+		}
+
+		image.texture = thumbnailTexture;
     }
     
     private IEnumerator getVideoInfo () {
@@ -185,13 +203,17 @@ public class ScopicMobileAPIInterface : MonoBehaviour {
     }
     
     private IEnumerator getTextureByUrl (string url, long id) {
-        WWW www = new WWW(url);
-        
-        yield return www;
-        
-        Texture texture = string.IsNullOrEmpty (www.error) ? www.textureNonReadable : null;
-        videoInfo[id].Add("thumbnail_texture", texture);
-        Debug.Log(id + " : thumnail Image downloaded");
+		if (!videoInfo[id].ContainsKey("thumbnail_texture")) {
+			WWW www = new WWW(url);
+
+			yield return www;
+
+			Texture texture = string.IsNullOrEmpty (www.error) ? www.textureNonReadable : null;
+			if (!videoInfo [id].ContainsKey ("thumbnail_texture")) {
+				videoInfo[id].Add("thumbnail_texture", texture);
+			}
+		}
+        Debug.Log(id + " : thumnail Image downloaded By All Downloader");
         currentTextureDownloadPos++;
     }
     

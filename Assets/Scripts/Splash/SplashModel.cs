@@ -15,6 +15,16 @@ public class SplashModel : MonoBehaviour {
 
 
 	/*
+	 * API Interface
+	 */
+	[SerializeField] private ScopicMobileAPIInterface apiInterface;
+
+	public ScopicMobileAPIInterface Api {
+		get { return apiInterface; }
+	}
+
+
+	/*
 	 * Camera Manager
 	 */
 	[SerializeField] private CamerasManager camManager;

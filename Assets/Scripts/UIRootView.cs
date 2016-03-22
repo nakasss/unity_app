@@ -41,8 +41,8 @@ public class UIRootView : MonoBehaviour {
 		uiAnimator.SetInteger (UI_SCENES_ID_KEY_NAME, (int)SCENE_ID.SPLASH);
 	}
 
-	public void DestorySplash () {
-		
+	public bool IsInSplash () {
+		return GetCurrentSceneId () == (int)SCENE_ID.SPLASH;
 	}
 
 
@@ -55,6 +55,16 @@ public class UIRootView : MonoBehaviour {
 		uiAnimator.SetInteger (UI_SCENES_ID_KEY_NAME, (int)SCENE_ID.MAIN);
 	}
 
+	public void GoMainFromPlay () {
+		playController.DestoryPlay ();
+
+		GoMain ();
+	}
+
+	public bool IsInMain () {
+		return GetCurrentSceneId () == (int)SCENE_ID.MAIN;
+	}
+
 
 	/*
 	 * Play
@@ -65,6 +75,10 @@ public class UIRootView : MonoBehaviour {
 		Screen.orientation = ScreenOrientation.LandscapeLeft;
 
 		playController.InitPlay (id, videoPath);
+	}
+
+	public bool IsInPlay () {
+		return GetCurrentSceneId () == (int)SCENE_ID.PLAY;
 	}
 
 
