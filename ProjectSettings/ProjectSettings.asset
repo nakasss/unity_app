@@ -9,7 +9,7 @@ PlayerSettings:
   targetDevice: 0
   useOnDemandResources: 0
   accelerometerFrequency: 60
-  companyName: DefaultCompany
+  companyName: Scopic
   productName: Scopic
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
@@ -98,8 +98,8 @@ PlayerSettings:
   virtualRealitySupported: 0
   productGUID: ea4eeb260577f42e8802b41e8fb4752f
   AndroidBundleVersionCode: 1
-  AndroidMinSdkVersion: 9
-  AndroidPreferredInstallLocation: 1
+  AndroidMinSdkVersion: 11
+  AndroidPreferredInstallLocation: 0
   aotOptions: 
   apiCompatibilityLevel: 2
   stripEngineCode: 1
@@ -156,8 +156,8 @@ PlayerSettings:
   iOSLaunchScreeniPadCustomXibPath: 
   iOSDeviceRequirements: []
   AndroidTargetDevice: 0
-  AndroidSplashScreenScale: 0
-  androidSplashScreen: {fileID: 0}
+  AndroidSplashScreenScale: 2
+  androidSplashScreen: {fileID: 2800000, guid: f9819511434174a8fa96c818c389bf7c, type: 3}
   AndroidKeystoreName: 
   AndroidKeyaliasName: 
   AndroidTVCompatibility: 0
