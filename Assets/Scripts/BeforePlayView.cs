@@ -123,7 +123,8 @@ public class BeforePlayView : MonoBehaviour {
         apiInterface.SetThumbnail(GetThumbnail(), id);
         
         // Description
-        SetDescription(apiInterface.GetDescription(id));
+		SetDescriptionWithDuration (apiInterface.GetDescription(id), (long)apiInterface.GetVideoDuration(id));
+        //SetDescription(apiInterface.GetDescription(id));
         
         // Reset top & bottom size default
         //SetAreaDefaultPosition();
@@ -266,6 +267,16 @@ public class BeforePlayView : MonoBehaviour {
     public void SetDescription (string descriptionText) {
         description.text = descriptionText;
     }
+
+	public void SetDescriptionWithDuration (string descriptionText, long sec) {
+		string minutePart = (sec / 60 < 10) ? "0" + (sec / 60).ToString() : (sec / 60).ToString();
+		string secPart = (sec % 60 < 10) ? "0" + (sec % 60).ToString() : (sec % 60).ToString();;
+		string duration = minutePart + ":" + secPart;
+
+		string descriptionWithDuration = descriptionText + "\r\n" + "\r\n" + "(" + duration + ")" + "\r\n";
+		SetDescription (descriptionWithDuration);
+	}
+
     #endregion Description
 
     

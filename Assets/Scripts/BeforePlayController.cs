@@ -159,8 +159,8 @@ public class BeforePlayController : MonoBehaviour {
      */
     #region Facebook button click
     public void OnClickFacebookButton () {
-        string shareURL = "http://www.scopic.nl/"; //Test
-		//string shareURL = model.Api.GetFbContet (ID);
+        //string shareURL = "http://www.scopic.nl/"; //Test
+		string shareURL = model.Api.GetFbContet (ID);
 
 		OpenApplicationManager.ShareToFB(shareURL);
     }
@@ -195,6 +195,7 @@ public class BeforePlayController : MonoBehaviour {
 
 		view.ShowDownloadButton ();
 		view.ShowBeforeDownloadButton ();
+		view.HideDeleteButton ();
 	}
 	#endregion File Delete Button
 
@@ -209,6 +210,8 @@ public class BeforePlayController : MonoBehaviour {
 	}
 
 	public void OnCompleteDownload (string requestURL, string filePath) {
+		view.ShowDeleteButton ();
+
 		if (VideoURL == requestURL) {
 			view.ShowPlayButton ();
 		}

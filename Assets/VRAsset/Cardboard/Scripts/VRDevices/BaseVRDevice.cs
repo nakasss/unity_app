@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+
 #if !UNITY_EDITOR
 #if UNITY_ANDROID
 #define ANDROID_DEVICE
@@ -63,6 +64,7 @@ public abstract class BaseVRDevice {
     // Always return landscape orientation.
     int width = Mathf.Max(Screen.width, Screen.height);
     int height = Mathf.Min(Screen.width, Screen.height);
+
     return new DisplayMetrics { width = width, height = height, xdpi = Screen.dpi, ydpi = Screen.dpi };
   }
 
@@ -100,10 +102,12 @@ public abstract class BaseVRDevice {
 
   public virtual RenderTexture CreateStereoScreen() {
     float scale = Cardboard.SDK.StereoScreenScale;
+
     int width = Mathf.RoundToInt(Screen.width * scale);
     int height = Mathf.RoundToInt(Screen.height * scale);
     //Debug.Log("Creating new default cardboard screen texture "
     //    + width+ "x" + height + ".");
+
     var rt = new RenderTexture(width, height, 24, RenderTextureFormat.Default);
     rt.anisoLevel = 0;
     rt.antiAliasing = Mathf.Max(QualitySettings.antiAliasing, 1);
@@ -250,7 +254,8 @@ public abstract class BaseVRDevice {
     float width = Screen.width * (leftEyeUndistortedViewport.width+rightEyeDistortedViewport.width);
     float height = Screen.height * Mathf.Max(leftEyeUndistortedViewport.height,
                                              rightEyeUndistortedViewport.height);
-    recommendedTextureSize = new Vector2(width, height);
+	
+	recommendedTextureSize = new Vector2(height, width);
   }
 
   private static Matrix4x4 MakeProjection(float l, float t, float r, float b, float n, float f) {

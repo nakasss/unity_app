@@ -30,6 +30,7 @@ using System.Collections.Generic;
 /// its starting properties.
 [AddComponentMenu("Cardboard/Cardboard")]
 public class Cardboard : MonoBehaviour {
+
   // Cardboard SDK Version
   public const string CARDBOARD_SDK_VERSION = "0.6";
 
@@ -58,12 +59,13 @@ public class Cardboard : MonoBehaviour {
 
   /// Generate a Cardboard instance.  Takes no action if one already exists.
   public static void Create() {
-    if (sdk == null && UnityEngine.Object.FindObjectOfType<Cardboard>() == null) {
-      Debug.Log("Creating Cardboard object");
-      var go = new GameObject("Cardboard", typeof(Cardboard));
-      go.transform.localPosition = Vector3.zero;
-      // sdk will be set by Cardboard.Awake().
-    }
+
+		if (sdk == null && UnityEngine.Object.FindObjectOfType<Cardboard> () == null) {
+			Debug.Log ("Creating Cardboard object");
+			var go = new GameObject ("Cardboard", typeof(Cardboard));
+			go.transform.localPosition = Vector3.zero;
+			// sdk will be set by Cardboard.Awake().
+		}
   }
 
   /// The StereoController instance attached to the main camera, or null if there is none.
@@ -474,9 +476,11 @@ public class Cardboard : MonoBehaviour {
   /// @endcond
 
   private void InitDevice() {
+
     if (device != null) {
       device.Destroy();
     }
+
     device = BaseVRDevice.GetDevice();
     device.Init();
 
@@ -518,6 +522,7 @@ public class Cardboard : MonoBehaviour {
   /// code to hiccup.  Exception: developer may call Application.DontDestroyOnLoad
   /// on the SDK if they want it to survive across scene loads.
   void Awake() {
+
     if (sdk == null) {
       sdk = this;
     }
@@ -541,6 +546,7 @@ public class Cardboard : MonoBehaviour {
   }
 
   void AddCardboardCamera() {
+
     var preRender = UnityEngine.Object.FindObjectOfType<CardboardPreRender>();
     if (preRender == null) {
       var go = new GameObject("PreRender", typeof(CardboardPreRender));
