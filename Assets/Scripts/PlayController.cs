@@ -86,6 +86,8 @@ public class PlayController : MonoBehaviour {
 	/*
 	 * Destory Play
 	 */
+    [SerializeField] private VRScreenView vrScreenView;
+    
 	public void DestoryPlay () {
 		ID = -1;
 
@@ -96,6 +98,8 @@ public class PlayController : MonoBehaviour {
 
 		model.VideoPlayer.UnLoadMovie ();
 		model.CamManager.UseSingleCam ();
+        
+        vrScreenView.SetDefaultTexture ();
 	}
 
 
@@ -146,14 +150,12 @@ public class PlayController : MonoBehaviour {
 
 	// Back Icon
 	[SerializeField] private UIRootView uiView;
-	[SerializeField] private VRScreenView vrScreenView;
 
 	public void OnClickBackIcon () {
 		DestoryPlay ();
 
 		model.CamManager.UseSingleCam ();
 		uiView.GoMain ();
-		vrScreenView.SetDefaultTexture ();
 	}
 
 
@@ -205,8 +207,8 @@ public class PlayController : MonoBehaviour {
 
 	// Facebook Button
 	public void OnClickFacebookButton () {
-		string shareURL = "http://www.scopic.nl/"; //Test
-		//string shareURL = model.Api.GetFbContet (ID);
+		//string shareURL = "http://www.scopic.nl/"; //Test
+		string shareURL = model.Api.GetFbContet (ID);
 
 		OpenApplicationManager.ShareToFB(shareURL);
 	}

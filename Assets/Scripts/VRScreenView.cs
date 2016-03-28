@@ -14,7 +14,6 @@ public class VRScreenView : MonoBehaviour {
 	}
 
 
-	[SerializeField] private Material material;
 	[SerializeField] private Texture defaultTexture;
 
 	public void SetDefaultTexture () {
@@ -23,7 +22,6 @@ public class VRScreenView : MonoBehaviour {
 
 
 	public void SetTexture (Texture texture) {
-		Debug.Log ("set Texture");
-		material.mainTexture = texture;
+		gameObject.GetComponent<Renderer>().material.mainTexture = texture;
 	}
 }

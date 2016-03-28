@@ -32,6 +32,7 @@ public class CamerasManager : MonoBehaviour {
 	/*
 	 * Cam Group
 	 */
+    /*
 	public void ToggleCamActive () {
 		if (IsSingleCamEnabled ()) {
 			DisableSingleCam ();
@@ -41,41 +42,50 @@ public class CamerasManager : MonoBehaviour {
 			DisableVRCam ();
 		}
 	}
+    */
 
 	public void UseSingleCam () {
+		Debug.Log ("Use Single Cam");
 		EnableSingleCam ();
 
 		if (IsVRCamEnabled ()) {
 			DisableVRCam ();
 		}
-
+      	
 		if (IsTutorialCamEnabled ()) {
+			Debug.Log ("Desable Tutorial Cam");
 			DisableTutorialCam ();
 		}
 	}
 
 	public void UseVRCam () {
+		Debug.Log ("Use VR Cam");
 		EnableVRCam ();
 
 		if (IsSingleCamEnabled ()) {
 			DisableSingleCam ();
 		}
-
+			
 		if (IsTutorialCamEnabled ()) {
 			DisableTutorialCam ();
 		}
 	}
 
 	public void UseTutorialCam () {
+		Debug.Log ("Use Tutorial VR Cam");
+		//Screen.orientation = ScreenOrientation.LandscapeLeft;
+
 		EnableTutorialCam ();
 
 		if (IsSingleCamEnabled ()) {
 			DisableSingleCam ();
 		}
-
+        
 		if (IsVRCamEnabled ()) {
 			DisableVRCam ();
 		}
+
+		//Screen.orientation = ScreenOrientation.Portrait;
 	}
 
 
@@ -93,14 +103,17 @@ public class CamerasManager : MonoBehaviour {
 	}
 
 	public bool IsSingleCamEnabled () {
-		return singleCam.active;
+		return singleCam.activeSelf;
 	}
 
 
 	/*
 	 * VR Camera
 	 */
+	#region VR Camera
+	[HeaderAttribute("VR Main Camera")]
 	[SerializeField] private GameObject vrCam;
+    
 	private Cardboard cardborad; 
 	public Cardboard VRCam {
 		get {
@@ -111,59 +124,72 @@ public class CamerasManager : MonoBehaviour {
 		}
 	}
 
-	public void EnableVRCam () {
+	private void EnableVRCam () {
 		vrCam.SetActive (true);
 	}
 
-	public void DisableVRCam () {
+	private void DisableVRCam () {
 		vrCam.SetActive (false);
 	}
-
-	public bool IsVRCamEnabled () {
-		return vrCam.active;
+    
+	private bool IsVRCamEnabled () {
+		return vrCam.activeSelf;
 	}
+
+	#endregion VR Camera
 
 
 	/*
 	 * Tutorial Camera
 	 */
-	[SerializeField] private GameObject tutorialVrCam;
-
-	public void EnableTutorialCam () {
-		tutorialVrCam.SetActive (true);
+     
+    #region Tutorial Camera
+    
+    [HeaderAttribute("Tutorial Camera")]
+	[SerializeField] private GameObject vrTutorialCam;
+	[SerializeField] private GameObject vrTutorialHeaderCam;
+    
+	private void EnableTutorialCam () {
+		if (vrTutorialCam == null) {
+			Debug.Log ("Tutorial Cam is missing");
+			return;
+		}
+		
+        // Tilt
+        #if UNITY_ANDROID
+		Quaternion rotation = vrTutorialHeaderCam.transform.rotation;
+        rotation.z = 1.0f;
+		vrTutorialHeaderCam.transform.rotation = rotation;
+        #endif
+        
+        vrTutorialCam.SetActive(true);
 	}
 
-	public void DisableTutorialCam () {
-		tutorialVrCam.SetActive (false);
+	private void DisableTutorialCam () {
+		Debug.Log ("Yeash Desable Tutorial Cam");
+		if (vrTutorialCam == null) {
+			Debug.Log ("Tutorial Cam is missing");
+			return;
+		}
+
+        vrTutorialCam.SetActive(false);
+        
+        // Back Tilt
+		Quaternion rotation = vrTutorialHeaderCam.transform.rotation;
+        rotation.z = 0;
+		vrTutorialHeaderCam.transform.rotation = rotation;
+
+		GameObject.Destroy (vrTutorialCam);
 	}
 
-	public bool IsTutorialCamEnabled () {
-		return tutorialVrCam.active;
+	private bool IsTutorialCamEnabled () {
+		if (vrTutorialCam == null) {
+			Debug.Log ("Tutorial Cam is missing");
+			return false;
+		} else {
+			return vrTutorialCam.activeSelf;
+		}
 	}
-
-	/*
-	public void EnableTutorialCam () {
-		VRCam.VRModeEnabled = false;
-
-		EnableVRCam ();
-		EnableTutorialSubCam ();
-	}
-
-	public void DisableTutorialCam () {
-		DisableTutorialSubCam ();
-		DisableVRCam ();
-	}
-
-	public void EnableTutorialSubCam () {
-		tutorialSubCam.gameObject.SetActive (true);
-	}
-
-	public void DisableTutorialSubCam () {
-		tutorialSubCam.gameObject.SetActive (false);
-	}
-
-	public bool IsTutorialCamEnabled () {
-		return tutorialSubCam.gameObject.active;
-	}
-	*/
+        
+    #endregion Tutorial Camera
 }

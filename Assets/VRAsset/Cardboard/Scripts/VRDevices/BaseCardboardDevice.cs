@@ -12,6 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+/*
+ * Modified by Yuta@scopic
+ * You can search modified codes by ""
+ */
+
+
 using UnityEngine;
 
 using AOT;
@@ -162,6 +168,7 @@ BaseVRDevice
   }
 
   private void UpdateProfile() {
+
     GetProfile(profileData);
     CardboardProfile.Device device = new CardboardProfile.Device();
     CardboardProfile.Screen screen = new CardboardProfile.Screen();
@@ -169,8 +176,24 @@ BaseVRDevice
     device.maxFOV.upper = profileData[1];
     device.maxFOV.inner = profileData[2];
     device.maxFOV.lower = profileData[3];
-    screen.width = profileData[4];
-    screen.height = profileData[5];
+	
+	/*
+	 * Modified Yuta@scopic
+	 */
+	#region Yuta's modification
+	if (profileData [4] > profileData [5]) {
+		screen.width = profileData [4];
+		screen.height = profileData [5];			
+	} else {
+		screen.width = profileData [5];
+		screen.height = profileData [4];
+	}
+
+	// original
+//    screen.width = profileData[4];
+//    screen.height = profileData[5];
+	#endregion Yuta's modification
+
     screen.border = profileData[6];
     device.lenses.separation = profileData[7];
     device.lenses.offset = profileData[8];

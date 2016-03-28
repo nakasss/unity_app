@@ -34,7 +34,8 @@ public class TopPageView : MonoBehaviour {
             VideoCellBase cell = CreateVideoCellForId(id);
             cell.Top = cellTop;
             
-            cell.Title = apiInterface.GetTitle(id);
+            //cell.Title = apiInterface.GetTitle(id);
+			cell.Title = getModifiedTitle(apiInterface.GetTitle(id));
             apiInterface.SetThumbnail(cell.thumbnailImg, id);
             
             cellTop = cellTop + new Vector2(0.0f, -cell.Height);
@@ -80,5 +81,32 @@ public class TopPageView : MonoBehaviour {
     }
     
     #endregion Cell
+
+
+	/*
+     * Title
+     */
+	#region Title
+
+	private string getModifiedTitle (string originalTitle) {
+		int charNum = 40;
+		string modifiedTitle = "";
+
+		string[] words = originalTitle.Split (' ');
+		foreach (string word in words) {
+			string appendTitle =  modifiedTitle.Length == 0 ? modifiedTitle + word : modifiedTitle + " " + word;
+
+			if (appendTitle.Length > charNum) {
+				modifiedTitle = modifiedTitle + " ...";
+				break;
+			} else {
+				modifiedTitle = modifiedTitle.Length == 0 ? modifiedTitle + word : modifiedTitle + " " + word;
+			}
+		}
+
+		return modifiedTitle;
+	}
+
+	#endregion Title
 
 }

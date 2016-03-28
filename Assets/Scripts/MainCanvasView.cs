@@ -41,6 +41,7 @@ public class MainCanvasView : MonoBehaviour {
 	/*
 	 * Open Drawer Menu
 	 */
+
 	public void OpenDrawer () {
 		naviBarView.SetNaviXMark ();
 		mainCanvasAnimator.SetBool (MAIN_CANVAS_PAGE_STATE_KEY_NAME, false);
