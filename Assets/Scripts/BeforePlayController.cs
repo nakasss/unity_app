@@ -114,9 +114,6 @@ public class BeforePlayController : MonoBehaviour {
 	[SerializeField] private PlayView playView;
 
     public void OnClickPlayButton () {
-        // Go To Play Button
-        Debug.Log("ID : ");
-
 		string requestUrl = model.Api.GetVideoURL (ID);
 		string downloadedVideoPath = "file://" + StreamAssetManager.GetFilePath (requestUrl);
 		float videoDuration = (float)model.Api.GetVideoDuration (ID);
@@ -172,10 +169,9 @@ public class BeforePlayController : MonoBehaviour {
      */
     #region Email button click
     public void OnClickEmailButton () {
-        string address = "";
-		//test
-		string subject = "Scopic VR";
-		//test
+		string address = "";
+		string title = string.IsNullOrEmpty (model.Api.GetSubtitle (ID)) ? model.Api.GetTitle (ID) : model.Api.GetTitle (ID) + ": " + model.Api.GetSubtitle (ID);
+		string subject = title +  " - by Scopic";
 		string body = model.Api.GetEmailContet (ID);
 
 		OpenApplicationManager.OpenEmailApp(address, subject, body);
@@ -218,6 +214,9 @@ public class BeforePlayController : MonoBehaviour {
 	}
 
 	public void OnErrorDownload (string requestURL, EasyBgDownloaderCtl.DOWNLOAD_ERROR errorCode, string errorMessage) {
+		view.ShowDownloadButton ();
+		// TODO : notify error message
+
 		if (VideoURL == requestURL) {
 			view.ShowBeforeDownloadButton ();
 		}

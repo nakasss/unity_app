@@ -37,7 +37,8 @@ public class ContactController : MonoBehaviour {
 	 * On Click Map Button
 	 */
 	public void OnClickMapButton () {
-		string scopicAddress = "129,tolstraat,Amsterdam,1074VJ,Netherlands";
+		//string scopicAddress = "129,tolstraat,Amsterdam,1074VJ,Netherlands";
+		string scopicAddress = "Duivendrechtsekade 64,1096 AH Amsterdam,Netherlands";
 
 		OpenApplicationManager.OpenMapApp(scopicAddress);
 	}

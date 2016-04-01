@@ -1059,7 +1059,7 @@ RectTransform:
   - {fileID: 1024843253}
   - {fileID: 1858123313}
   m_Father: {fileID: 397358556}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0.15}
   m_AnchoredPosition: {x: 0, y: 0}
@@ -1192,8 +1192,8 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1259261675}
   m_RootOrder: 1
-  m_AnchorMin: {x: 0.1, y: 0.4}
-  m_AnchorMax: {x: 0.9, y: 0.95}
+  m_AnchorMin: {x: 0.1, y: 0.38}
+  m_AnchorMax: {x: 0.9, y: 0.96}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -1922,7 +1922,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: READY TO DIVE?
+  m_Text: ARE YOU READY?
 --- !u!222 &206016469
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3539,6 +3539,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1831116641}
+  - {fileID: 1482403050}
   - {fileID: 104777890}
   m_Father: {fileID: 2111933266}
   m_RootOrder: 2
@@ -4546,8 +4547,8 @@ RectTransform:
   - {fileID: 350174810}
   m_Father: {fileID: 1929141009}
   m_RootOrder: 1
-  m_AnchorMin: {x: 0, y: 0.1}
-  m_AnchorMax: {x: 1, y: 0.25}
+  m_AnchorMin: {x: 0, y: 0.08}
+  m_AnchorMax: {x: 1, y: 0.22}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -5349,7 +5350,8 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1.1
-  m_Text: 'If you have a VR headset ,tap viewer icon to see full VR experience. '
+  m_Text: Are you using a VR headset? Tap the viewer icon to be fully immersed in
+    virtual reality.
 --- !u!222 &623751599
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -5416,7 +5418,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: e3daff82f2ac54856ad54bf493cbece1, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.7071066
+      value: 0.8191519
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: e3daff82f2ac54856ad54bf493cbece1, type: 3}
       propertyPath: m_LocalRotation.z
@@ -5424,7 +5426,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: e3daff82f2ac54856ad54bf493cbece1, type: 3}
       propertyPath: m_LocalRotation.w
-      value: -0.70710695
+      value: -0.5735767
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: e3daff82f2ac54856ad54bf493cbece1, type: 3}
       propertyPath: m_RootOrder
@@ -5843,8 +5845,8 @@ RectTransform:
   - {fileID: 1099196178}
   m_Father: {fileID: 1929141009}
   m_RootOrder: 0
-  m_AnchorMin: {x: 0, y: 0.1}
-  m_AnchorMax: {x: 1, y: 0.25}
+  m_AnchorMin: {x: 0, y: 0.08}
+  m_AnchorMax: {x: 1, y: 0.22}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -6889,7 +6891,7 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1182591504}
   m_RootOrder: 1
-  m_AnchorMin: {x: 0.15, y: 0.27}
+  m_AnchorMin: {x: 0.15, y: 0.33}
   m_AnchorMax: {x: 0.85, y: 0.46}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
@@ -6927,7 +6929,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1.2
-  m_Text: Welcome to SCOPIC. Move you phone to see all around you.
+  m_Text: Move your phone to look around.
 --- !u!222 &763987243
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -7452,7 +7454,7 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 494874775}
   m_RootOrder: 2
-  m_AnchorMin: {x: 0.1, y: 0.3}
+  m_AnchorMin: {x: 0.1, y: 0.28}
   m_AnchorMax: {x: 0.9, y: 0.92}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
@@ -7478,18 +7480,21 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
     m_Font: {fileID: 12800000, guid: 1f9c567269dc54462a410eec38e74431, type: 3}
-    m_FontSize: 60
+    m_FontSize: 56
     m_FontStyle: 0
     m_BestFit: 1
-    m_MinSize: 6
-    m_MaxSize: 100
+    m_MinSize: 1
+    m_MaxSize: 56
     m_Alignment: 0
     m_AlignByGeometry: 1
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
-    m_LineSpacing: 1.2
-  m_Text: 'To present the visitors of the EYE film museum with an unmatched film experience,
+    m_LineSpacing: 1.3
+  m_Text: '<size="100">Subtitle</size>
+
+
+    To present the visitors of the EYE film museum with an unmatched film experience,
     Scopic teamed up with Supernova to deliver exquisite virtual reality content.
     During the Museumnacht 2015, those that looked for an expansion of the mind got
     their needs satisfied. Scopic created a journey through space and time to show
@@ -9412,11 +9417,11 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
-    m_Font: {fileID: 12800000, guid: 1210d21328b90492699a2fae16014478, type: 3}
+    m_Font: {fileID: 12800000, guid: fba4d40d5007946c4818184a897382b8, type: 3}
     m_FontSize: 14
     m_FontStyle: 0
     m_BestFit: 1
-    m_MinSize: 10
+    m_MinSize: 1
     m_MaxSize: 100
     m_Alignment: 4
     m_AlignByGeometry: 0
@@ -12393,6 +12398,79 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainCanvasAnimator: {fileID: 1467288641}
   naviBarView: {fileID: 1069736908}
+--- !u!1 &1482403049
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 224: {fileID: 1482403050}
+  - 222: {fileID: 1482403052}
+  - 114: {fileID: 1482403051}
+  m_Layer: 5
+  m_Name: TopSubtitle
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1482403050
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1482403049}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 397358556}
+  m_RootOrder: 1
+  m_AnchorMin: {x: 0.1, y: 0.72}
+  m_AnchorMax: {x: 0.9, y: 0.755}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1482403051
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1482403049}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 708705254, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  m_FontData:
+    m_Font: {fileID: 12800000, guid: fba4d40d5007946c4818184a897382b8, type: 3}
+    m_FontSize: 14
+    m_FontStyle: 0
+    m_BestFit: 1
+    m_MinSize: 1
+    m_MaxSize: 200
+    m_Alignment: 1
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
+    m_LineSpacing: 1
+  m_Text: 'VOLVO OCEAN RACE '
+--- !u!222 &1482403052
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1482403049}
 --- !u!1 &1488844091
 GameObject:
   m_ObjectHideFlags: 0
@@ -14931,11 +15009,13 @@ MonoBehaviour:
   descriptionArea: {fileID: 494874775}
   apiInterface: {fileID: 327620155}
   topTitle: {fileID: 1831116642}
+  topSubtitle: {fileID: 1482403051}
   goPlayButtonAnimator: {fileID: 737717900}
   progressCircle: {fileID: 1978503123}
   downloadButtonAnimator: {fileID: 1051534195}
   fileSizeLabel: {fileID: 1124914745}
   thumbnail: {fileID: 202658562}
+  thumbnailDummy: {fileID: 2800000, guid: f9819511434174a8fa96c818c389bf7c, type: 3}
   bottomTitle: {fileID: 634204225}
   videoDurationLabel: {fileID: 1682722617}
   description: {fileID: 815640037}
@@ -15587,7 +15667,7 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 397358556}
   m_RootOrder: 0
-  m_AnchorMin: {x: 0.15, y: 0.72}
+  m_AnchorMin: {x: 0.15, y: 0.78}
   m_AnchorMax: {x: 0.85, y: 0.85}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
@@ -15624,7 +15704,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Sample Video Title
+  m_Text: VOLVO OCEAN RACE
 --- !u!222 &1831116643
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -18749,7 +18829,7 @@ MonoBehaviour:
   view: {fileID: 2140008306}
   model: {fileID: 2140008309}
   vrScreenView: {fileID: 628416357}
-  tutorialTexture: {fileID: 2800000, guid: c00b8d8e275bc47fb84dabfd3054ff06, type: 3}
+  tutorialTexture: {fileID: 2800000, guid: d62e9c0eaa4104adcb80ba9d233db46c, type: 3}
   uiView: {fileID: 1622718769}
 --- !u!114 &2140008306
 MonoBehaviour:

@@ -72,7 +72,7 @@ public class PlayController : MonoBehaviour {
 		view.DisablePlayButton ();
 		view.DisableProgressBar ();
 		view.SetProgressTimerBySec (0);
-		view.SetVideoTitle (model.Api.GetTitle (ID));
+		view.SetVideoTitle (model.Api.GetTitle (ID), model.Api.GetSubtitle (ID));
 		view.SetTotalTimerBySec ((long)VideoDuration);
 		view.SetProgress (0.0f);
 
@@ -216,9 +216,8 @@ public class PlayController : MonoBehaviour {
 	// Email Button
 	public void OnClickEmailButton () {
 		string address = "";
-		//test
-		string subject = "Scopic VR";
-		//test
+		string title = string.IsNullOrEmpty (model.Api.GetSubtitle (ID)) ? model.Api.GetTitle (ID) : model.Api.GetTitle (ID) + ": " + model.Api.GetSubtitle (ID);
+		string subject = title +  " - by Scopic";
 		string body = model.Api.GetEmailContet (ID);
 
 		OpenApplicationManager.OpenEmailApp (address, subject, body);
