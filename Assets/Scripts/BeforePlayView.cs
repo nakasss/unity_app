@@ -116,13 +116,16 @@ public class BeforePlayView : MonoBehaviour {
     [SerializeField] private ScopicMobileAPIInterface apiInterface;
     public void UpdateContentsById (long id) {
         // Titles
-        SetTopTitle(apiInterface.GetTitle(id));
+		SetTopTitle (apiInterface.GetTitle(id));
+		SetTopSubtitle (apiInterface.GetSubtitle (id));
         SetBottomTitle(apiInterface.GetTitle(id));
         
         // Thumbnail
+		SetThumbnailDefault();
         apiInterface.SetThumbnail(GetThumbnail(), id);
         
         // Description
+		//SetDescriptionWithSubtitleAndDuration (apiInterface.GetDescription(id), apiInterface.GetSubtitle(id), (long)apiInterface.GetVideoDuration(id));
 		SetDescriptionWithDuration (apiInterface.GetDescription(id), (long)apiInterface.GetVideoDuration(id));
         //SetDescription(apiInterface.GetDescription(id));
         
@@ -141,6 +144,20 @@ public class BeforePlayView : MonoBehaviour {
         topTitle.text = title;
     }
     #endregion Top Title
+
+
+	/*
+     * Top Subtitle
+     */
+	#region Top Title
+	[SerializeField] private Text topSubtitle;
+
+	public void SetTopSubtitle (string subtitle) {
+		if (topSubtitle != null) {
+			topSubtitle.text = subtitle;
+		}
+	}
+	#endregion Top Subtitle
 
 
 	/*
@@ -226,10 +243,28 @@ public class BeforePlayView : MonoBehaviour {
      */
     #region Thumbnail
     [SerializeField] private RawImage thumbnail;
+	[SerializeField] private Texture thumbnailDummy;
     
     public RawImage GetThumbnail () {
         return thumbnail;
     }
+
+	public void SetThumbnailDefault () {
+		thumbnail.texture = thumbnailDummy;
+	}
+
+	public void SetThumbnailTransparent () {
+		Color thumbnailColor = thumbnail.color;
+		thumbnailColor.a = 0;
+		thumbnail.color = thumbnailColor;
+	}
+
+	public void SetThumbnailApprent () {
+		Color thumbnailColor = thumbnail.color;
+		thumbnailColor.a = 1;
+		thumbnail.color = thumbnailColor;
+	}
+		
     #endregion Thumbnail
     
     /*
@@ -263,8 +298,16 @@ public class BeforePlayView : MonoBehaviour {
      */
     #region Description
     [SerializeField] private Text description;
-    
+	private static readonly int MAX_CHAR_NUM_WITHOUT_BEST_FIT = 500;
+
     public void SetDescription (string descriptionText) {
+		if (descriptionText.Length > MAX_CHAR_NUM_WITHOUT_BEST_FIT) {
+			description.resizeTextForBestFit = true;
+		} else {
+			description.resizeTextForBestFit = false;
+		}
+		Debug.Log ("Description length : " + descriptionText.Length);
+
         description.text = descriptionText;
     }
 
@@ -274,6 +317,22 @@ public class BeforePlayView : MonoBehaviour {
 		string duration = minutePart + ":" + secPart;
 
 		string descriptionWithDuration = descriptionText + "\r\n" + "\r\n" + "(" + duration + ")" + "\r\n";
+		SetDescription (descriptionWithDuration);
+	}
+
+	public void SetDescriptionWithSubtitleAndDuration (string descriptionText, string subtitle, long sec) {
+		string minutePart = (sec / 60 < 10) ? "0" + (sec / 60).ToString() : (sec / 60).ToString();
+		string secPart = (sec % 60 < 10) ? "0" + (sec % 60).ToString() : (sec % 60).ToString();;
+		string duration = minutePart + ":" + secPart;
+
+		string descriptionWithDuration;
+		if (!string.IsNullOrEmpty (subtitle)) {
+			subtitle = "<b>" + subtitle + "</b>";
+			descriptionWithDuration = subtitle + "\r\n" + "\r\n" + descriptionText + "\r\n" + "\r\n" + "(" + duration + ")";
+		} else {
+			descriptionWithDuration = descriptionText + "\r\n" + "\r\n" + "(" + duration + ")" + "\r\n";
+		}
+	
 		SetDescription (descriptionWithDuration);
 	}
 

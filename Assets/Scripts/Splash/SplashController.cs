@@ -7,7 +7,7 @@ public class SplashController : MonoBehaviour {
 	[SerializeField] private SplashView view;
 	[SerializeField] private SplashModel model;
 
-	private static readonly bool DEBUG_MODE = true;
+	private static readonly bool DEBUG_MODE = false;
 
 
 	// Use this for initialization

@@ -60,8 +60,9 @@ public class PlayView : MonoBehaviour {
 	// Title
 	[SerializeField] private Text videoTitle;
 
-	public void SetVideoTitle (string title) {
-		videoTitle.text = title;
+	public void SetVideoTitle (string title, string subtitle = null) {
+		videoTitle.text = string.IsNullOrEmpty (subtitle) ? title : title + ": " + subtitle;
+		//videoTitle.text = title;
 	}
 
 	public string GetVideoTitle () {

@@ -45,7 +45,6 @@ public class CamerasManager : MonoBehaviour {
     */
 
 	public void UseSingleCam () {
-		Debug.Log ("Use Single Cam");
 		EnableSingleCam ();
 
 		if (IsVRCamEnabled ()) {
@@ -53,13 +52,11 @@ public class CamerasManager : MonoBehaviour {
 		}
       	
 		if (IsTutorialCamEnabled ()) {
-			Debug.Log ("Desable Tutorial Cam");
 			DisableTutorialCam ();
 		}
 	}
 
 	public void UseVRCam () {
-		Debug.Log ("Use VR Cam");
 		EnableVRCam ();
 
 		if (IsSingleCamEnabled ()) {
@@ -72,9 +69,6 @@ public class CamerasManager : MonoBehaviour {
 	}
 
 	public void UseTutorialCam () {
-		Debug.Log ("Use Tutorial VR Cam");
-		//Screen.orientation = ScreenOrientation.LandscapeLeft;
-
 		EnableTutorialCam ();
 
 		if (IsSingleCamEnabled ()) {
@@ -84,8 +78,6 @@ public class CamerasManager : MonoBehaviour {
 		if (IsVRCamEnabled ()) {
 			DisableVRCam ();
 		}
-
-		//Screen.orientation = ScreenOrientation.Portrait;
 	}
 
 
@@ -156,7 +148,7 @@ public class CamerasManager : MonoBehaviour {
 		}
 		
         // Tilt
-        #if UNITY_ANDROID
+		#if UNITY_ANDROID || UNITY_IPHONE
 		Quaternion rotation = vrTutorialHeaderCam.transform.rotation;
         rotation.z = 1.0f;
 		vrTutorialHeaderCam.transform.rotation = rotation;

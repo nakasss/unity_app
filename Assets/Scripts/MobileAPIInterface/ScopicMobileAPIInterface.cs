@@ -75,6 +75,12 @@ public class ScopicMobileAPIInterface : MonoBehaviour {
 		return videoInfo.ContainsKey (id) ? (string)videoInfo [id] ["title"] : "";
 		//return (string)videoInfo[id]["title"];
     }
+
+	public string GetSubtitle (long id = -1) {
+		id = id == -1 ? idList[currentIdPosition] : id;
+		return videoInfo.ContainsKey (id) ? (string)videoInfo [id] ["subtitle"] : "";
+		//return (string)videoInfo[id]["title"];
+	}
     
     public string GetDescription (long id = -1) {
         id = id == -1 ? idList[currentIdPosition] : id;
@@ -170,7 +176,14 @@ public class ScopicMobileAPIInterface : MonoBehaviour {
         }
         
         IList jsonData = (IList) MiniJSON.Json.Deserialize(www.text);
-        Debug.Log("List size : " + jsonData.Count);
+
+		if (jsonData != null) {
+			Debug.Log ("List size : " + jsonData.Count);
+		} else {
+			Debug.Log ("Failed To Access to data");
+			return false;
+		}
+			
         foreach (Dictionary<string, object> video in jsonData) {
             long id = (long)video["id"];
             Debug.Log("ID : " + id);

@@ -35,8 +35,9 @@ public class TopPageView : MonoBehaviour {
             cell.Top = cellTop;
             
             //cell.Title = apiInterface.GetTitle(id);
-			cell.Title = getModifiedTitle(apiInterface.GetTitle(id));
-            apiInterface.SetThumbnail(cell.thumbnailImg, id);
+			//cell.Title = getModifiedTitle(apiInterface.GetTitle(id));
+			cell.Title = getModifiedTitle (getTitleWithSubtitle (apiInterface.GetTitle (id), apiInterface.GetSubtitle (id)));
+			apiInterface.SetThumbnail (cell.thumbnailImg, id);
             
             cellTop = cellTop + new Vector2(0.0f, -cell.Height);
         }
@@ -87,6 +88,10 @@ public class TopPageView : MonoBehaviour {
      * Title
      */
 	#region Title
+
+	private string getTitleWithSubtitle (string mainTitle, string subtitle) {
+		return string.IsNullOrEmpty (subtitle) ? mainTitle : mainTitle + ": " + subtitle;
+	}
 
 	private string getModifiedTitle (string originalTitle) {
 		int charNum = 40;
