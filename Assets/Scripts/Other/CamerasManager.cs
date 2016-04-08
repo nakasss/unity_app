@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.iOS;
 using System.Collections;
 
 public class CamerasManager : MonoBehaviour {
@@ -143,7 +144,6 @@ public class CamerasManager : MonoBehaviour {
     
 	private void EnableTutorialCam () {
 		if (vrTutorialCam == null) {
-			Debug.Log ("Tutorial Cam is missing");
 			return;
 		}
 		
@@ -158,9 +158,7 @@ public class CamerasManager : MonoBehaviour {
 	}
 
 	private void DisableTutorialCam () {
-		Debug.Log ("Yeash Desable Tutorial Cam");
 		if (vrTutorialCam == null) {
-			Debug.Log ("Tutorial Cam is missing");
 			return;
 		}
 
@@ -176,7 +174,6 @@ public class CamerasManager : MonoBehaviour {
 
 	private bool IsTutorialCamEnabled () {
 		if (vrTutorialCam == null) {
-			Debug.Log ("Tutorial Cam is missing");
 			return false;
 		} else {
 			return vrTutorialCam.activeSelf;

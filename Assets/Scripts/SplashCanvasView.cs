@@ -43,7 +43,7 @@ public class SplashCanvasView : MonoBehaviour {
 
 
 	public void DestorySplashCanvas () {
-		Debug.Log ("Destory");
+		Debug.Log ("Destory Splash Canvas");
 		Destroy (gameObject);
 	}
 }

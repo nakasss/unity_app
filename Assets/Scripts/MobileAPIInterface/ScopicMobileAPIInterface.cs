@@ -175,21 +175,28 @@ public class ScopicMobileAPIInterface : MonoBehaviour {
             yield return null;
         }
         
-        IList jsonData = (IList) MiniJSON.Json.Deserialize(www.text);
-
-		if (jsonData != null) {
-			Debug.Log ("List size : " + jsonData.Count);
-		} else {
+		if (string.IsNullOrEmpty(www.text)) {
+			//TODO : Insert Error Handling
 			Debug.Log ("Failed To Access to data");
 			return false;
 		}
-			
+        IList jsonData = (IList) MiniJSON.Json.Deserialize(www.text);
+
+		if (jsonData == null) {
+			//TODO : Insert Error Handling
+			Debug.Log ("Failed To Access to data");
+			return false;
+		}
+
         foreach (Dictionary<string, object> video in jsonData) {
             long id = (long)video["id"];
-            Debug.Log("ID : " + id);
-            idList.Add(id);
+			if (!idList.Contains (id)) {
+				idList.Add (id);
+			}
             
-            videoInfo[id] = video;
+			if (!videoInfo.ContainsKey (id)) {
+				videoInfo[id] = video;
+			}
         }
         
         OnLoadedAPI();
@@ -226,7 +233,7 @@ public class ScopicMobileAPIInterface : MonoBehaviour {
 				videoInfo[id].Add("thumbnail_texture", texture);
 			}
 		}
-        Debug.Log(id + " : thumnail Image downloaded By All Downloader");
+        //Debug.Log(id + " : thumnail Image downloaded By All Downloader");
         currentTextureDownloadPos++;
     }
     
@@ -247,8 +254,8 @@ public class ScopicMobileAPIInterface : MonoBehaviour {
      * API Event
      */
     private void OnLoadedAPI () {
-        Debug.Log("On Loaded");
-        //testLoop();
+        //Debug.Log("On Loaded");
+
         isLoaded = true;
         StartCoroutine(getAllTexture());
         
@@ -258,7 +265,8 @@ public class ScopicMobileAPIInterface : MonoBehaviour {
     }
     
     private void OnReadyAPI () {
-        Debug.Log("Get Ready");
+        //Debug.Log("Get Ready");
+
         isReady = true;
         
         if (OnReady != null) {

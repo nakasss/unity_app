@@ -302,11 +302,10 @@ public class BeforePlayView : MonoBehaviour {
 
     public void SetDescription (string descriptionText) {
 		if (descriptionText.Length > MAX_CHAR_NUM_WITHOUT_BEST_FIT) {
-			description.resizeTextForBestFit = true;
+			//description.resizeTextForBestFit = true;
 		} else {
-			description.resizeTextForBestFit = false;
+			//description.resizeTextForBestFit = false;
 		}
-		Debug.Log ("Description length : " + descriptionText.Length);
 
         description.text = descriptionText;
     }

@@ -116,7 +116,7 @@ public class BeforePlayController : MonoBehaviour {
     public void OnClickPlayButton () {
 		string requestUrl = model.Api.GetVideoURL (ID);
 		string downloadedVideoPath = "file://" + StreamAssetManager.GetFilePath (requestUrl);
-		float videoDuration = (float)model.Api.GetVideoDuration (ID);
+		//float videoDuration = (float)model.Api.GetVideoDuration (ID);
 
 		uiView.GoPlay (ID, downloadedVideoPath);
     }
@@ -129,7 +129,17 @@ public class BeforePlayController : MonoBehaviour {
 	 */
 	#region Download Button
 
+	[SerializeField] private NetworkPopupController networkPopupController;
+	[SerializeField] private NetworkPopupView networkPopupView;
+
 	public void OnClickStartDownloadButton () {
+		// Network Check
+		if (!NetworkManager.IsReachableNetwork ()) {
+			networkPopupController.OnRetryNetworkConnect = OnClickStartDownloadButton;
+			networkPopupView.ShowNetworkDisconnection ();
+			return;
+		}
+
 		string requestURL = VideoURL;
 		string naviTitle = model.Api.GetTitle (ID);
 
@@ -214,10 +224,10 @@ public class BeforePlayController : MonoBehaviour {
 	}
 
 	public void OnErrorDownload (string requestURL, EasyBgDownloaderCtl.DOWNLOAD_ERROR errorCode, string errorMessage) {
-		view.ShowDownloadButton ();
 		// TODO : notify error message
 
 		if (VideoURL == requestURL) {
+			model.Downloader.StopDL (VideoURL);
 			view.ShowBeforeDownloadButton ();
 		}
 	}

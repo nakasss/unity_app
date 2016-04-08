@@ -11,20 +11,6 @@ public class SplashView : MonoBehaviour {
 	void Start () {
 		//Set Screen Orientation
 		Screen.orientation = ScreenOrientation.Portrait;
-
-		/*
-		 * Test
-		 */
-
-		/*
-		HideSplash ();
-		Debug.Log ("Is Show ? : " + IsShowSplash());
-		*/
-
-		/*
-		 * End : Test
-		 */
-
 	}
 	
 	// Update is called once per frame

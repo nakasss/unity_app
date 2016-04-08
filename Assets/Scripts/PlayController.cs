@@ -17,7 +17,7 @@ public class PlayController : MonoBehaviour {
 
 	private string videoPath = "";
 	private static readonly string TEST_VIDEO_PATH_EDITOR = "https://storage.googleapis.com/scopic-mobile-app-storage/videos/sample_movie.ogv";
-	private static readonly string TEST_VIDEO_PATH_MOBILE = "https://storage.googleapis.com/scopic-mobile-app-storage/videos/sample_movie.mp4";
+	//private static readonly string TEST_VIDEO_PATH_MOBILE = "https://storage.googleapis.com/scopic-mobile-app-storage/videos/sample_movie.mp4";
 	public string VideoPath {
 		get {
 			return (Application.platform != RuntimePlatform.OSXEditor) ? videoPath : TEST_VIDEO_PATH_EDITOR;
@@ -79,6 +79,22 @@ public class PlayController : MonoBehaviour {
 		model.VideoPlayer.OnVideoReady = OnVideoLoadReady;
 		model.VideoPlayer.OnEnd = OnVideoEnd;
 		model.VideoPlayer.LoadMovie (VideoPath);
+
+		/*
+		 * Test
+		 */
+		//string testvideofile = "SampleVideo_1280x720_1mb.mp4";
+		//model.VideoPlayer.LoadMovie (testvideofile);
+		Debug.Log ("iOS test : Video Path : " + VideoPath);
+		string[] files = StreamAssetManager.GetAllFiles ();
+		Debug.Log ("iOS test : Files Number : " + files.Length);
+		foreach (string file in files) {
+			Debug.Log ("iOS test : Files : " + file);	
+		}
+		/*
+		 * Test
+		 */
+
 		model.CamManager.UseVRCam ();
 	}
 

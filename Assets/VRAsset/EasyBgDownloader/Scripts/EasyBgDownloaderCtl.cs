@@ -11,10 +11,16 @@ public class EasyBgDownloaderCtl : MonoBehaviour {
 	private string fileURL = "";
 	[SerializeField, TooltipAttribute("Local path where downloaded file will be.")]
 	private string destinationDirPath = "";
+	/*
+	 * //TODO : add this function
     [SerializeField, TooltipAttribute("If it's enabled, you get notification when download proccess finished as background.")]
 	private bool notificationEnabled = true;
-    [SerializeField, TooltipAttribute("If it's enabled, download proccess will be cached and you resume process after proccess stoped.")]
+	*/
+	/*
+	* //TODO : add this function
+	[SerializeField, TooltipAttribute("If it's enabled, download proccess will be cached and you resume process after proccess stoped.")]
 	private bool cacheEnabled = false;
+	*/
 
 
 	private static readonly string DEFAULT_CACHE_DIR = "ebd_tmp";
@@ -64,10 +70,11 @@ public class EasyBgDownloaderCtl : MonoBehaviour {
 	}
 
 	public enum DOWNLOAD_ERROR {
-		NETWORK_ERROR = 1,
-        INVALID_URL = 2,
-        INVALID_DIR_PATH = 3,
-        UNKNOWN_ERROR = 4
+		NETWORK_ERROR = 10,
+        INVALID_URL = 20,
+        INVALID_DIR_PATH = 30,
+		INSUFFICIENT_SPACE = 40,
+        UNKNOWN_ERROR = 100
 	}
 
 
@@ -466,6 +473,7 @@ public class EasyBgDownloaderCtl : MonoBehaviour {
 	 */
     private void onCompleteDL (string taskInfo) {
         if (OnComplete == null) return;
+
         string[] taskInfoStrings = taskInfo.Split(','); //[0] requestURL, [1] destinationPath
         string requestURL = !string.IsNullOrEmpty(taskInfoStrings[0]) ? taskInfoStrings[0] : "";
         string destFilePath = !string.IsNullOrEmpty(taskInfoStrings[1]) ? taskInfoStrings[1] : "";
@@ -672,7 +680,7 @@ public class EasyBgDownloaderCtl : MonoBehaviour {
 
 		while (!www.isDone) {
 			if (isInQueue (requestURL)) {
-                Debug.Log("Progress : " + www.progress);
+                //Debug.Log("Progress : " + www.progress);
 				if (requestURLInEditor == requestURL) {
                     currentProgressInEditor = www.progress;
                     if (currentProgressInEditor > 0.995) {

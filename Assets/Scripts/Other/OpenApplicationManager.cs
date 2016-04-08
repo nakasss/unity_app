@@ -9,10 +9,10 @@ public class OpenApplicationManager {
 	public static void OpenFBPage (string pageID) {
 		//TODO : Use URL Schene
 		string fbPageBaseURL = "https://www.facebook.com/";
-		//string fbPageDirectURLScheme = "fb://profile/";
-		string fbPageDirectURLScheme = "fb://page/";
 		string fbPageURL = fbPageBaseURL + WWW.EscapeURL(pageID);
-		string fbPageDirectURL = fbPageDirectURLScheme + WWW.EscapeURL(pageID);
+		//string fbPageDirectURLScheme = "fb://profile/";
+		//string fbPageDirectURLScheme = "fb://page/";
+		//string fbPageDirectURL = fbPageDirectURLScheme + WWW.EscapeURL(pageID);
 
 		OpenAppByURL(fbPageURL);
 		//OpenAppByURL(fbPageDirectURL);
@@ -20,9 +20,9 @@ public class OpenApplicationManager {
 
 	public static void OpenInstaUserPage (string accountID) {
 		//TODO : Use URL Schene
-		string instaPageBaseURL = "https://www.instagram.com/";
+		//string instaPageBaseURL = "https://www.instagram.com/";
+		//string instaPageURL = instaPageBaseURL + WWW.EscapeURL(accountID);
 		string instaPageURLScheme = "instagram://user?username=";
-		string instaPageURL = instaPageBaseURL + WWW.EscapeURL(accountID);
 		string instaPageDirectURL = instaPageURLScheme + WWW.EscapeURL(accountID);
 
 		//OpenAppByURL(instaPageURL);
@@ -32,9 +32,9 @@ public class OpenApplicationManager {
 	public static void OpenInsta (string accountID) {
 		//TODO : Use URL Schene
 		string instaPageBaseURL = "https://www.instagram.com/";
-		string instaPageURLScheme = "https://www.instagram.com/";
 		string instaPageURL = instaPageBaseURL + WWW.EscapeURL(accountID);
-		string instaPageDirectURL = instaPageBaseURL + WWW.EscapeURL(accountID);
+		//string instaPageURLScheme = "https://www.instagram.com/";
+		//string instaPageDirectURL = instaPageBaseURL + WWW.EscapeURL(accountID);
 
 		OpenAppByURL(instaPageURL);
 	}

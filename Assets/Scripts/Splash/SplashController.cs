@@ -12,7 +12,7 @@ public class SplashController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		
+		Init ();
 	}
 	
 	// Update is called once per frame
@@ -27,7 +27,13 @@ public class SplashController : MonoBehaviour {
 	[SerializeField] VRScreenView vrScreenView;
 
 	public void Init () {
-		vrScreenView.SetDefaultTexture ();	
+		if (NetworkManager.IsReachableNetwork()) {
+			model.Api.StartLoadAPI ();
+		}
+		model.Api.StartLoadAPI ();
+
+		vrScreenView.SetDefaultTexture ();
+
 	}
 
 
@@ -35,7 +41,10 @@ public class SplashController : MonoBehaviour {
 	 * Splash Root
 	 */
 	#region Splash Root
+
 	[SerializeField] private SplashCanvasView splashCnavasView;
+	[SerializeField] private NetworkPopupController networkPopupController;
+	[SerializeField] private NetworkPopupView networkPopupView;
 
 	public delegate void ScreenShow();
 	public ScreenShow OnShow;
@@ -45,31 +54,38 @@ public class SplashController : MonoBehaviour {
 			OnShow ();
 		}
 
+		MoveTutorialOrMain ();
+	}
+
+	public void MoveTutorialOrMain () {
+		// Network Connection Check
+		if (!NetworkManager.IsReachableNetwork()) {
+			networkPopupView.ShowNetworkDisconnection ();
+			networkPopupController.OnRetryNetworkConnect = () => {
+				if (!model.Api.IsLoaded ()) {
+					model.Api.StartLoadAPI ();
+				}
+				MoveTutorialOrMain ();
+			};
+			return;
+		}
+
 		if (FirstOpenManager.IsFirstOpen (DEBUG_MODE)) {
-			splashCnavasView.GoTutorial ();
+			MoveTutorial ();
 		} else {
+			MoveMain ();
+		}
+	}
 
-			if (model.Api.IsLoaded ()) {
-				view.MoveLogoToTop ();
-			} else {
-				model.Api.OnLoaded += view.MoveLogoToTop;
-			}
+	public void MoveTutorial () {
+		splashCnavasView.GoTutorial ();
+	}
 
-			/*
-			if (DEBUG_MODE) {
-				if (model.Api.IsLoaded ()) {
-					view.MoveLogoToTop ();
-				} else {
-					model.Api.OnLoaded += view.MoveLogoToTop;
-				}
-			} else {
-				if (model.Api.IsReady ()) {
-					view.MoveLogoToTop ();
-				} else {
-					model.Api.OnReady += view.MoveLogoToTop;
-				}
-			}
-			*/
+	public void MoveMain () {
+		if (model.Api.IsLoaded ()) {
+			view.MoveLogoToTop ();
+		} else {
+			model.Api.OnLoaded += view.MoveLogoToTop;
 		}
 	}
 
@@ -96,7 +112,6 @@ public class SplashController : MonoBehaviour {
 		}
 
 		uiView.GoMain ();
-		//splashCnavasView.DestorySplashCanvas ();
 	}
 
 	#endregion Logo
