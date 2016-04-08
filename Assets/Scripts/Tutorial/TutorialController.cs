@@ -3,7 +3,7 @@ using System.Collections;
 
 
 public class TutorialController : MonoBehaviour {
-	private static readonly string turotialMovieURL = "https://storage.googleapis.com/me-nakas-test-bucket-8th-feb/sample-movie/sample_scene.mp4";
+	//private static readonly string turotialMovieURL = "https://storage.googleapis.com/me-nakas-test-bucket-8th-feb/sample-movie/sample_scene.mp4";
 
 	[SerializeField] private TutorialView view;
 	[SerializeField] private TutotialModel model;

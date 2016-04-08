@@ -195,7 +195,7 @@ public class MovieManager : MonoBehaviour {
 			easyMovieTexture.m_TargetMaterial = new GameObject[]{targetScreen};
 		}
 
-		//Detect when video is ready//
+		//Detect when video is ready
 		easyMovieTexture.OnReady = () => {
 			if (!audioEnabled) {
 				easyMovieTexture.SetVolume(0.0f);

@@ -12,11 +12,15 @@ public class StreamAssetManager {
 	 */
 	public static string DirPath {
 		get {
-			string dirPath = 
-				((Application.platform == RuntimePlatform.OSXEditor) ? 
-					Application.streamingAssetsPath : 
-					Application.temporaryCachePath) +
-				"/" + STREAM_ASSET_DIR_NAME;
+			string dirPath = "";
+			if (Application.platform == RuntimePlatform.Android) {
+				dirPath = Application.temporaryCachePath + "/" + STREAM_ASSET_DIR_NAME;
+			} else if (Application.platform == RuntimePlatform.IPhonePlayer) {
+				//dirPath = Application.persistentDataPath + "/" + STREAM_ASSET_DIR_NAME;
+				dirPath = Application.temporaryCachePath + "/" + STREAM_ASSET_DIR_NAME;
+			} else {
+				dirPath = Application.streamingAssetsPath + "/" + STREAM_ASSET_DIR_NAME;
+			}
 
 			if (!Directory.Exists (dirPath)) {
 				Directory.CreateDirectory (dirPath);
@@ -57,6 +61,14 @@ public class StreamAssetManager {
 		if (File.Exists (filePath)) {
 			File.Delete (filePath);
 		}
+	}
+
+	/*
+	 * File List
+	 */
+	public static string[] GetAllFiles () {
+		string[] files = Directory.GetFiles (DirPath, "*", System.IO.SearchOption.AllDirectories);
+		return files;
 	}
 
 }
