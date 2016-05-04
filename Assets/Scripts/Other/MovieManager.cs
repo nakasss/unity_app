@@ -16,7 +16,7 @@ public class MovieManager : MonoBehaviour {
 	public delegate void MovieEnd();
 	public MovieEnd OnEnd;
 
-//	private static readonly string TEST_URL = "https://storage.googleapis.com/scopic-mobile-app-storage/videos/sample_movie.ogv";
+	private static readonly string TEST_URL = "https://storage.googleapis.com/scopic-mobile-app-storage/videos/test/sample_movie.ogv";
 
 
 
@@ -39,9 +39,9 @@ public class MovieManager : MonoBehaviour {
 	// -- Controller --
 	//
 	public void LoadMovie (string moviePath = null) {
-//		if (!isMobilePlatform() || moviePath == null) {
-//			moviePath = TEST_URL;
-//		}
+		if (!isMobilePlatform() || moviePath == null) {
+			moviePath = TEST_URL;
+		}
 
 		#if UNITY_EDITOR
 		StartCoroutine("LoadEditorMovie", moviePath);

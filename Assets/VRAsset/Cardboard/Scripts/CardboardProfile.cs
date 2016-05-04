@@ -322,6 +322,7 @@ public class CardboardProfile {
     float fovRight = Mathf.Tan(device.maxFOV.inner * Mathf.Deg2Rad);
     float fovBottom = Mathf.Tan(-device.maxFOV.lower * Mathf.Deg2Rad);
     // Viewport size.
+//		Debug.Log("CardboardProfile : GetLeftEyeVisibleTanAngles : width : "+screen.width+", height : "+screen.height+".");
     float halfWidth = screen.width / 4;
     float halfHeight = screen.height / 2;
     // Viewport center, measured from left lens position.
@@ -349,6 +350,7 @@ public class CardboardProfile {
     float fovRight = device.distortion.distortInv(Mathf.Tan(device.maxFOV.inner * Mathf.Deg2Rad));
     float fovBottom = device.distortion.distortInv(Mathf.Tan(-device.maxFOV.lower * Mathf.Deg2Rad));
     // Viewport size.
+//		Debug.Log("CardboardProfile : GetLeftEyeNoLensTanAngles : width : "+screen.width+", height : "+screen.height+".");
     float halfWidth = screen.width / 4;
     float halfHeight = screen.height / 2;
     // Viewport center, measured from left lens position.
@@ -378,6 +380,7 @@ public class CardboardProfile {
     float right = (undistortedFrustum[2] * dist + eyeX) / screen.width;
     float bottom = (undistortedFrustum[3] * dist + eyeY) / screen.height;
     return new Rect(left, bottom, right - left, top - bottom);
+//		Debug.Log("CardboardProfile : GetLeftEyeVisibleScreenRect : width : "+screen.width+", height : "+screen.height+".");
   }
 
   public static float GetMaxRadius(float[] tanAngleRect) {

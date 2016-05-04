@@ -6,8 +6,7 @@ public class UIRootView : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		//GoMain ();
-		GoSplash();
+
 	}
 	
 	// Update is called once per frame
@@ -23,6 +22,7 @@ public class UIRootView : MonoBehaviour {
 
 	[SerializeField] private Animator uiAnimator;
 	[SerializeField] private PlayController playController;
+	[SerializeField] private CamerasManager camManager;
 
 	private static readonly string UI_SCENES_ID_KEY_NAME = "SceneId";
 	public enum SCENE_ID : int {
@@ -37,6 +37,7 @@ public class UIRootView : MonoBehaviour {
 	 */
 	public void GoSplash () {
 		Screen.orientation = ScreenOrientation.Portrait;
+//		Screen.orientation = ScreenOrientation.LandscapeLeft; //test
 
 		uiAnimator.SetInteger (UI_SCENES_ID_KEY_NAME, (int)SCENE_ID.SPLASH);
 	}
@@ -51,6 +52,7 @@ public class UIRootView : MonoBehaviour {
 	 */
 	public void GoMain () {
 		Screen.orientation = ScreenOrientation.Portrait;
+//		Screen.orientation = ScreenOrientation.LandscapeLeft; //test
 
 		uiAnimator.SetInteger (UI_SCENES_ID_KEY_NAME, (int)SCENE_ID.MAIN);
 	}
@@ -69,11 +71,13 @@ public class UIRootView : MonoBehaviour {
 	/*
 	 * Play
 	 */
+	[SerializeField] private VRScreenView vrScreenView;
+
 	public void GoPlay (long id, string videoPath = null) {
+		vrScreenView.UpsideDownForiOS ();
 		uiAnimator.SetInteger (UI_SCENES_ID_KEY_NAME, (int)SCENE_ID.PLAY);
 
 		Screen.orientation = ScreenOrientation.LandscapeLeft;
-
 		playController.InitPlay (id, videoPath);
 	}
 

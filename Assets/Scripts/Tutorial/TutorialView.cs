@@ -12,7 +12,7 @@ public class TutorialView : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		InitView();
+		
 	}
 	
 	// Update is called once per frame
@@ -22,7 +22,6 @@ public class TutorialView : MonoBehaviour {
 
 
 	public void InitView () {
-
 		UpdateTutorialSize();
 	}
 

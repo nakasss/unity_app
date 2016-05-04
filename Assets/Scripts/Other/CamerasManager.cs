@@ -69,7 +69,8 @@ public class CamerasManager : MonoBehaviour {
 		}
 	}
 
-	public void UseTutorialCam () {
+	public void UseTutorialCam (bool instantUse = true) {
+		instantUseOrNot = instantUse;
 		EnableTutorialCam ();
 
 		if (IsSingleCamEnabled ()) {
@@ -135,12 +136,12 @@ public class CamerasManager : MonoBehaviour {
 	/*
 	 * Tutorial Camera
 	 */
-     
     #region Tutorial Camera
     
     [HeaderAttribute("Tutorial Camera")]
 	[SerializeField] private GameObject vrTutorialCam;
 	[SerializeField] private GameObject vrTutorialHeaderCam;
+	private bool instantUseOrNot = true;
     
 	private void EnableTutorialCam () {
 		if (vrTutorialCam == null) {
@@ -148,11 +149,13 @@ public class CamerasManager : MonoBehaviour {
 		}
 		
         // Tilt
+		#if !UNITY_EDITOR
 		#if UNITY_ANDROID || UNITY_IPHONE
 		Quaternion rotation = vrTutorialHeaderCam.transform.rotation;
         rotation.z = 1.0f;
 		vrTutorialHeaderCam.transform.rotation = rotation;
         #endif
+		#endif
         
         vrTutorialCam.SetActive(true);
 	}
@@ -169,7 +172,9 @@ public class CamerasManager : MonoBehaviour {
         rotation.z = 0;
 		vrTutorialHeaderCam.transform.rotation = rotation;
 
-		GameObject.Destroy (vrTutorialCam);
+		if (instantUseOrNot) {
+			GameObject.Destroy (vrTutorialCam);
+		}
 	}
 
 	private bool IsTutorialCamEnabled () {

@@ -11,16 +11,12 @@ public class EasyBgDownloaderCtl : MonoBehaviour {
 	private string fileURL = "";
 	[SerializeField, TooltipAttribute("Local path where downloaded file will be.")]
 	private string destinationDirPath = "";
-	/*
-	 * //TODO : add this function
+	//TODO : add this function
     [SerializeField, TooltipAttribute("If it's enabled, you get notification when download proccess finished as background.")]
 	private bool notificationEnabled = true;
-	*/
-	/*
-	* //TODO : add this function
+	//TODO : add this function
 	[SerializeField, TooltipAttribute("If it's enabled, download proccess will be cached and you resume process after proccess stoped.")]
 	private bool cacheEnabled = false;
-	*/
 
 
 	private static readonly string DEFAULT_CACHE_DIR = "ebd_tmp";

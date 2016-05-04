@@ -10,7 +10,7 @@ public class VRScreenView : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	
+		
 	}
 
 
@@ -23,5 +23,19 @@ public class VRScreenView : MonoBehaviour {
 
 	public void SetTexture (Texture texture) {
 		gameObject.GetComponent<Renderer>().material.mainTexture = texture;
+	}
+
+
+	[SerializeField] private Transform screen;
+
+	public void UpsideDownForiOS () {
+
+		#if UNITY_IPHONE
+		if (transform.localScale.y > 0) {
+			Vector3 screenScale = transform.localScale;
+			screenScale.y = -transform.localScale.y;
+			transform.localScale = screenScale;
+		}
+		#endif
 	}
 }
