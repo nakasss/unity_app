@@ -26,9 +26,9 @@ public class SplashCanvasView : MonoBehaviour {
 
 
 	public void GoTutorial () {
-		splashView.Hide ();
 		tutorialController.Init ();
 		tutorialView.Show ();
+		splashView.Hide ();
 	}
 
 
@@ -43,7 +43,7 @@ public class SplashCanvasView : MonoBehaviour {
 
 
 	public void DestorySplashCanvas () {
-		Debug.Log ("Destory Splash Canvas");
+		//Debug.Log ("Destory Splash Canvas");
 		Destroy (gameObject);
 	}
 }

@@ -10,7 +10,17 @@ public class UIRootController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-	
+		#if UNITY_IPHONE
+//		Screen.orientation = ScreenOrientation.LandscapeLeft; //test
+//		Debug.Log("First Left Orientation");
+//		model.Cam.UseTutorialCam(false);
+//		Screen.orientation = ScreenOrientation.Portrait; //test
+//		Debug.Log("First Portrait Orientation");
+//		model.Cam.UseSingleCam();
+		#endif
+
+		//GoMain ();
+		view.GoSplash ();
 	}
 	
 	// Update is called once per frame

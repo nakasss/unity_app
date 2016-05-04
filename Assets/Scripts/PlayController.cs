@@ -44,7 +44,6 @@ public class PlayController : MonoBehaviour {
 		/*
 		 * Test
 		 */
-//		InitPlay (0);
 		// End : Test
 	}
 
@@ -74,26 +73,13 @@ public class PlayController : MonoBehaviour {
 		view.SetProgressTimerBySec (0);
 		view.SetVideoTitle (model.Api.GetTitle (ID), model.Api.GetSubtitle (ID));
 		view.SetTotalTimerBySec ((long)VideoDuration);
+		view.ShowPlayBtn ();
+		view.HideVideoEndBtns ();
 		view.SetProgress (0.0f);
 
 		model.VideoPlayer.OnVideoReady = OnVideoLoadReady;
 		model.VideoPlayer.OnEnd = OnVideoEnd;
 		model.VideoPlayer.LoadMovie (VideoPath);
-
-		/*
-		 * Test
-		 */
-		//string testvideofile = "SampleVideo_1280x720_1mb.mp4";
-		//model.VideoPlayer.LoadMovie (testvideofile);
-		Debug.Log ("iOS test : Video Path : " + VideoPath);
-		string[] files = StreamAssetManager.GetAllFiles ();
-		Debug.Log ("iOS test : Files Number : " + files.Length);
-		foreach (string file in files) {
-			Debug.Log ("iOS test : Files : " + file);	
-		}
-		/*
-		 * Test
-		 */
 
 		model.CamManager.UseVRCam ();
 	}

@@ -33,7 +33,6 @@ public class SplashController : MonoBehaviour {
 		model.Api.StartLoadAPI ();
 
 		vrScreenView.SetDefaultTexture ();
-
 	}
 
 

@@ -24,6 +24,7 @@ public class TutorialController : MonoBehaviour {
 	 * Init
 	 */
 	public void Init () {
+		view.InitView ();
 		model.Cam.UseTutorialCam ();
 	}
 

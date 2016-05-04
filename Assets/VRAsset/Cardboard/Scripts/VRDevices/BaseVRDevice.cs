@@ -105,8 +105,8 @@ public abstract class BaseVRDevice {
 
     int width = Mathf.RoundToInt(Screen.width * scale);
     int height = Mathf.RoundToInt(Screen.height * scale);
-    //Debug.Log("Creating new default cardboard screen texture "
-    //    + width+ "x" + height + ".");
+//    Debug.Log("Creating new default cardboard screen texture "
+//			+ Screen.width + "x" + Screen.height + ".");
 
     var rt = new RenderTexture(width, height, 24, RenderTextureFormat.Default);
     rt.anisoLevel = 0;

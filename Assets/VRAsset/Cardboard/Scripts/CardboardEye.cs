@@ -112,10 +112,29 @@ public class CardboardEye : MonoBehaviour {
     if (eye == Cardboard.Eye.Right) {
       rect.x -= 0.5f;
     }
-    rect.width *= 2 * view.width;
-    rect.x = view.x + 2 * rect.x * view.width;
-    rect.height *= view.height;
-    rect.y = view.y + rect.y * view.height;
+
+	#region Yuta's modification
+//		Debug.Log("FixProjection 1 : view.width : " + view.width + ", view.height : " + view.height);
+//		Debug.Log("FixProjection 2 : view.x : " + view.x + ", view.y : " + view.y);
+//		if (view.width < view.height) {
+//			float nextWidth = view.height;
+//			view.height = view.width;
+//			view.width = nextWidth;
+//		}
+//		rect.width *= 2 * view.width;
+//		rect.x = view.x + 2 * rect.x * view.width;
+//		rect.height *= view.height;
+//		rect.y = view.y + rect.y * view.height;
+//		Debug.Log("FixProjection 3 : view.width : " + view.width + ", view.height : " + view.height);
+//		Debug.Log("FixProjection 4 : view.x : " + view.x + ", view.y : " + view.y);
+	
+	// original
+	rect.width *= 2 * view.width;
+	rect.x = view.x + 2 * rect.x * view.width;
+	rect.height *= view.height;
+	rect.y = view.y + rect.y * view.height;
+	#endregion Yuta's modification
+
     if (Application.isEditor) {
       // The Game window's aspect ratio may not match the fake device parameters.
       float realAspect = (float)Screen.width / Screen.height;
@@ -267,6 +286,10 @@ public class CardboardEye : MonoBehaviour {
     transform.localPosition = localPosition;
     transform.localRotation = Quaternion.identity;
     transform.localScale = Vector3.one;
+//		Debug.Log ("CopyCameraAndMakeSideBySide : ipd : " + ipd);
+//		Debug.Log ("CopyCameraAndMakeSideBySide : transform.localPosition : " + transform.localPosition);
+//		Debug.Log ("CopyCameraAndMakeSideBySide : transform.localRotation : " + transform.localRotation);
+//		Debug.Log ("CopyCameraAndMakeSideBySide : transform.localScale : " + transform.localScale);
 
     Skybox monoCameraSkybox = monoCamera.GetComponent<Skybox>();
     Skybox customSkybox = GetComponent<Skybox>();

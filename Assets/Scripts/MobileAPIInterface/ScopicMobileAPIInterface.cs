@@ -11,6 +11,8 @@ public class ScopicMobileAPIInterface : MonoBehaviour {
 	[SerializeField] private bool autoLoadStartEnable = true;
     
     private static readonly string API_BASE_URL = "http://104.155.2.128/api/v1/video/";
+	private static readonly string TEST_API_BASE_URL = "http://104.155.2.128/api/v1/test/";
+	private bool DEBUG_MODE = false;
     
     private bool isLoaded = false;
     private bool isReady = false;
@@ -90,8 +92,20 @@ public class ScopicMobileAPIInterface : MonoBehaviour {
     
     public string GetVideoURL (long id = -1) {
         id = id == -1 ? idList[currentIdPosition] : id;
+
+		#if UNITY_IPHONE
+		if (MobileDeviceManager.IsiPhone6Later()) {
+			return videoInfo.ContainsKey (id) ? (string)videoInfo [id] ["video_url"] : "";
+		} else {
+			string lowerVideoUrl = videoInfo.ContainsKey (id) ? (string)videoInfo [id] ["video_url_iphone5"] : "";
+			if (string.IsNullOrEmpty (lowerVideoUrl)) {
+				lowerVideoUrl = videoInfo.ContainsKey (id) ? (string)videoInfo [id] ["video_url"] : "";
+			}
+			return lowerVideoUrl;
+		}
+		#else
 		return videoInfo.ContainsKey (id) ? (string)videoInfo [id] ["video_url"] : "";
-        //return (string)videoInfo[id]["video_url"];
+		#endif
     }
     
     public float GetVideoDuration (long id = -1) {
@@ -169,7 +183,8 @@ public class ScopicMobileAPIInterface : MonoBehaviour {
     }
     
     private IEnumerator getVideoInfo () {
-        WWW www = new WWW(API_BASE_URL);
+		string api = DEBUG_MODE ? TEST_API_BASE_URL : API_BASE_URL;
+        WWW www = new WWW(api);
         
         while (!www.isDone) {
             yield return null;
